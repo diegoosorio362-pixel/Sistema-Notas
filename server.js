@@ -29,7 +29,7 @@ function loadTeachersFromCSV() {
             .on('data', (row) => {
                 const teacher = {
                     id: parseInt(row.id),
-                    email: row.email,
+                    username: row.username,
                     password: row.password,
                     name: row.name
                 };
@@ -45,8 +45,8 @@ function loadTeachersFromCSV() {
         console.log('⚠️ Archivo teachers.csv no encontrado, usando datos de ejemplo');
         // Datos de ejemplo si no hay CSV
         teachers = [
-            { id: 1, email: 'profesor@escuela.edu', password: 'admin123', name: 'Profesor Principal' },
-            { id: 2, email: 'maestro@escuela.edu', password: 'teacher123', name: 'Maestro Secundario' }
+            { id: 1, username: 'profesor', password: '123456', name: 'Profesor Principal' },
+            { id: 2, username: 'admin', password: 'admin123', name: 'Administrador' }
         ];
     }
 }
@@ -154,14 +154,14 @@ app.get('/api/teachers', (req, res) => {
 
 // POST /api/login - Login de profesores
 app.post('/api/login', (req, res) => {
-    const { email, password } = req.body;
-    console.log(`🔐 Intentando login: ${email}`);
+    const { username, password } = req.body;
+    console.log(`🔐 Intentando login: ${username}`);
     
-    const teacher = teachers.find(t => t.email === email && t.password === password);
+    const teacher = teachers.find(t => t.username === username && t.password === password);
     
     if (teacher) {
         console.log(`✅ Login exitoso: ${teacher.name}`);
-        res.json({ success: true, teacher: { name: teacher.name, email: teacher.email } });
+        res.json({ success: true, teacher: { id: teacher.id, name: teacher.name, username: teacher.username } });
     } else {
         console.log('❌ Login fallido');
         res.json({ success: false, message: 'Credenciales incorrectas' });
