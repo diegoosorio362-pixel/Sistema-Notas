@@ -65,7 +65,7 @@ function saveStudentsToCSV() {
     });
     
     const data = students.map(student => ({
-        documento: student.documento,
+        documento: student.documento || student.id,
         nombre: student.name,
         grado: student.grade
     }));
@@ -110,13 +110,13 @@ function loadStudentsFromCSV() {
         fs.createReadStream(csvPath)
             .pipe(csv())
             .on('data', (row) => {
-                // Convertir filas del CSV a objetos estudiantes (simplificado)
+                // Convertir filas del CSV a objetos estudiantes
                 const student = {
-                    id: row.id || row.documento,
-                    name: row.nombre || row.name, // Campo correcto para la página web
+                    id: row.documento || row.id,
+                    name: row.nombre || row.name,
                     documento: row.documento || row.id,
-                    parentCedula: row.documento || row.id, // Usar documento como cédula del padre
-                    grade: '10'
+                    parentCedula: row.documento || row.id,
+                    grade: row.grado || row.grade || '10'
                 };
                 students.push(student);
             })
