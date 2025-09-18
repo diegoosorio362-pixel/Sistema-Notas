@@ -178,6 +178,26 @@ app.post('/api/students', (req, res) => {
     res.json({ message: 'Estudiante creado exitosamente', student: newStudent });
 });
 
+// DELETE /api/students/:id - Eliminar estudiante
+app.delete('/api/students/:id', (req, res) => {
+    const studentId = req.params.id;
+    const initialLength = students.length;
+    
+    students = students.filter(student => student.id !== studentId && student.documento !== studentId);
+    
+    if (students.length < initialLength) {
+        console.log(`🗑️ Estudiante eliminado: ${studentId}`);
+        
+        // Guardar en CSV
+        saveStudentsToCSV();
+        
+        res.json({ message: 'Estudiante eliminado exitosamente' });
+    } else {
+        console.log(`❌ Estudiante no encontrado: ${studentId}`);
+        res.status(404).json({ message: 'Estudiante no encontrado' });
+    }
+});
+
 // GET /api/teachers - Obtener todos los profesores
 app.get('/api/teachers', (req, res) => {
     console.log(`👨‍🏫 Consultando ${teachers.length} profesores`);

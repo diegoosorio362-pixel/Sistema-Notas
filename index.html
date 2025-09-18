@@ -137,40 +137,38 @@
                 <form id="addStudentForm" class="form">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="studentName">Nombre Completo:</label>
-                            <input type="text" id="studentName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="studentId">ID Estudiante:</label>
-                            <input type="text" id="studentId" required>
+                            <label for="studentName">📝 Nombre Completo:</label>
+                            <input type="text" id="studentName" placeholder="Ej: Juan Pérez García" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="parentCedula">Cédula del Padre/Madre:</label>
-                            <input type="text" id="parentCedulaAdd" required>
+                            <label for="studentId">🆔 Cédula del Estudiante:</label>
+                            <input type="text" id="studentId" placeholder="Ej: 1234567890" required>
                         </div>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group">
-                            <label for="grade">Grado:</label>
+                            <label for="grade">🎓 Grado:</label>
                             <select id="grade" required>
                                 <option value="">Seleccionar grado</option>
-                                <option value="1">Primero</option>
-                                <option value="2">Segundo</option>
-                                <option value="3">Tercero</option>
-                                <option value="4">Cuarto</option>
-                                <option value="5">Quinto</option>
-                                <option value="6">Sexto</option>
-                                <option value="7">Séptimo</option>
-                                <option value="8">Octavo</option>
-                                <option value="9">Noveno</option>
-                                <option value="10">Décimo</option>
-                                <option value="11">Once</option>
+                                <option value="1°">1° Primero</option>
+                                <option value="2°">2° Segundo</option>
+                                <option value="3°">3° Tercero</option>
+                                <option value="4°">4° Cuarto</option>
+                                <option value="5°">5° Quinto</option>
+                                <option value="6°">6° Sexto</option>
+                                <option value="7°">7° Séptimo</option>
+                                <option value="8°">8° Octavo</option>
+                                <option value="9°">9° Noveno</option>
+                                <option value="10°">10° Décimo</option>
+                                <option value="11°">11° Once</option>
                             </select>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary btn-large">
                         <i class="fas fa-plus"></i>
-                        Registrar Estudiante
+                        ✅ Registrar Estudiante
                     </button>
                 </form>
             </div>
