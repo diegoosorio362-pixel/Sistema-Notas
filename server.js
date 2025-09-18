@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const csv = require('csv-parser');
 const fs = require('fs');
 const path = require('path');
+const csvWriter = require('csv-writer');
 
 const app = express();
 const PORT = 3000;
@@ -49,6 +50,33 @@ function loadTeachersFromCSV() {
             { id: 2, username: 'admin', password: 'admin123', name: 'Administrador' }
         ];
     }
+}
+
+// Función para guardar estudiantes en CSV
+function saveStudentsToCSV() {
+    const csvPath = 'students.csv';
+    const writer = csvWriter.createObjectCsvWriter({
+        path: csvPath,
+        header: [
+            {id: 'documento', title: 'documento'},
+            {id: 'nombre', title: 'nombre'},
+            {id: 'grado', title: 'grado'}
+        ]
+    });
+    
+    const data = students.map(student => ({
+        documento: student.documento,
+        nombre: student.name,
+        grado: student.grade
+    }));
+    
+    writer.writeRecords(data)
+        .then(() => {
+            console.log(`✅ ${students.length} estudiantes guardados en ${csvPath}`);
+        })
+        .catch((error) => {
+            console.error('❌ Error al guardar CSV:', error);
+        });
 }
 
 // Cargar estudiantes desde CSV
@@ -143,6 +171,10 @@ app.post('/api/students', (req, res) => {
     students.push(newStudent);
     
     console.log(`➕ Estudiante agregado: ${newStudent.name || newStudent.nombre}`);
+    
+    // Guardar en CSV
+    saveStudentsToCSV();
+    
     res.json({ message: 'Estudiante creado exitosamente', student: newStudent });
 });
 
