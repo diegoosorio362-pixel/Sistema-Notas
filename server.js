@@ -387,6 +387,41 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// POST /api/save-temp-notes - Guardar notas temporales
+app.post('/api/save-temp-notes', (req, res) => {
+    const tempData = req.body;
+    
+    // Guardar en archivo CSV temporal
+    const csvPath = 'temp_notes.csv';
+    const fs = require('fs');
+    
+    try {
+        // Leer archivo existente
+        let csvContent = '';
+        if (fs.existsSync(csvPath)) {
+            csvContent = fs.readFileSync(csvPath, 'utf8');
+        } else {
+            csvContent = 'studentId,studentName,subject,evaluationCategory,subcategory,grade,period,description,timestamp\n';
+        }
+        
+        // Agregar nuevas notas
+        tempData.notes.forEach(note => {
+            const timestamp = new Date().toISOString();
+            const line = `${tempData.studentDocument},${tempData.studentName},${tempData.subject},${tempData.evaluationCategory},${note.subcategory},${note.grade},${note.period},${note.description},${timestamp}\n`;
+            csvContent += line;
+        });
+        
+        // Escribir archivo
+        fs.writeFileSync(csvPath, csvContent);
+        
+        console.log(`💾 ${tempData.notes.length} notas temporales guardadas para ${tempData.studentName}`);
+        res.json({ message: 'Notas temporales guardadas correctamente', count: tempData.notes.length });
+    } catch (error) {
+        console.error('Error al guardar notas temporales:', error);
+        res.status(500).json({ error: 'Error al guardar notas temporales' });
+    }
+});
+
 // Inicializar servidor
 loadTeachersFromCSV();
 loadStudentsFromCSV();

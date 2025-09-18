@@ -399,27 +399,72 @@
                                 </div>
                             </div>
 
-                            <!-- Sección 4: Calificación -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h4><i class="fas fa-star"></i> Calificación</h4>
-                                </div>
-                                <div class="grade-input-container">
-                                    <div class="form-group">
-                                        <label for="gradeValue">
-                                            <i class="fas fa-percentage"></i>
-                                            Nota (Escala 0.0 - 5.0)
-                                        </label>
-                                        <div class="grade-input-wrapper">
-                                            <input type="number" id="gradeValue" min="0" max="5" step="0.1" required class="grade-input">
-                                            <div class="grade-scale">
-                                                <span class="scale-min">0.0</span>
-                                                <span class="scale-max">5.0</span>
+                                <!-- Sección 4: Cálculo Automático -->
+                                <div class="form-section">
+                                    <div class="section-header">
+                                        <h4><i class="fas fa-calculator"></i> Cálculo Automático</h4>
+                                        <p class="calculation-info">El sistema calculará automáticamente la nota final basada en los porcentajes</p>
+                                    </div>
+                                    
+                                    <!-- Resultado del cálculo -->
+                                    <div id="calculationResult" class="calculation-result" style="display: none;">
+                                        <div class="calculation-header">
+                                            <h5><i class="fas fa-chart-bar"></i> Resultado del Cálculo</h5>
+                                            <button type="button" id="recalculateBtn" class="btn-recalculate">
+                                                <i class="fas fa-sync-alt"></i>
+                                                Recalcular
+                                            </button>
+                                        </div>
+                                        <div class="calculation-details">
+                                            <div class="category-calculation">
+                                                <div class="category-header">
+                                                    <span class="category-name">🧠 Saber (40%)</span>
+                                                    <span class="category-result" id="saberResult">-</span>
+                                                </div>
+                                                <div class="category-breakdown" id="saberBreakdown"></div>
+                                            </div>
+                                            <div class="category-calculation">
+                                                <div class="category-header">
+                                                    <span class="category-name">🛠️ Hacer (40%)</span>
+                                                    <span class="category-result" id="hacerResult">-</span>
+                                                </div>
+                                                <div class="category-breakdown" id="hacerBreakdown"></div>
+                                            </div>
+                                            <div class="category-calculation">
+                                                <div class="category-header">
+                                                    <span class="category-name">👤 Ser (20%)</span>
+                                                    <span class="category-result" id="serResult">-</span>
+                                                </div>
+                                                <div class="category-breakdown" id="serBreakdown"></div>
+                                            </div>
+                                        </div>
+                                        <div class="final-grade">
+                                            <div class="final-grade-header">
+                                                <span class="final-label">Nota Final:</span>
+                                                <span class="final-value" id="finalGradeValue">0.0</span>
+                                            </div>
+                                            <div class="final-grade-bar">
+                                                <div class="final-grade-fill" id="finalGradeFill"></div>
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <!-- Botones de acción -->
+                                    <div class="calculation-actions">
+                                        <button type="button" id="calculateGradeBtn" class="btn-calculate">
+                                            <i class="fas fa-calculator"></i>
+                                            Calcular Nota Final
+                                        </button>
+                                        <button type="button" id="clearFormBtn" class="btn-clear">
+                                            <i class="fas fa-trash-alt"></i>
+                                            Limpiar Formulario
+                                        </button>
+                                        <button type="button" id="saveTempBtn" class="btn-save-temp">
+                                            <i class="fas fa-save"></i>
+                                            Guardar Temporal
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
 
                             <!-- Botón de envío -->
                             <div class="form-actions">
