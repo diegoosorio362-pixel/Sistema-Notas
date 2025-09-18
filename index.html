@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Notas Escolares</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- SQL.js for database -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>Sistema de Notas Escolares</h1>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-section="login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Iniciar Sesión
+                </button>
+                <button class="nav-btn" data-section="parent-query">
+                    <i class="fas fa-search"></i>
+                    Consultar Notas
+                </button>
+            </nav>
+        </header>
+
+        <!-- Login Section (Profesores) -->
+        <section id="login" class="section active">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-user-tie"></i> Acceso Profesores</h2>
+                </div>
+                <form id="loginForm" class="form">
+                    <div class="form-group">
+                        <label for="teacherEmail">Correo Electrónico:</label>
+                        <input type="email" id="teacherEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="teacherPassword">Contraseña:</label>
+                        <input type="password" id="teacherPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Iniciar Sesión
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Parent Query Section -->
+        <section id="parent-query" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-search"></i> Consulta de Notas</h2>
+                    <p>Ingrese la cédula del padre/madre para consultar las notas</p>
+                </div>
+                <form id="parentQueryForm" class="form">
+                    <div class="form-group">
+                        <label for="parentCedula">Cédula de Identidad:</label>
+                        <input type="text" id="parentCedula" placeholder="Ej: 12345678" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-search"></i>
+                        Consultar Notas
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Results will be displayed here -->
+            <div id="queryResults" class="results-container" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-graduate"></i> Información del Estudiante</h3>
+                    </div>
+                    <div id="studentInfo" class="student-info"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-bar"></i> Calificaciones por Materia</h3>
+                    </div>
+                    <div id="gradesTable" class="grades-table"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Teacher Dashboard (hidden initially) -->
+        <section id="teacher-dashboard" class="section">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Panel del Profesor</h2>
+                <button id="logoutBtn" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Cerrar Sesión
+                </button>
+            </div>
+
+            <!-- Import Excel Data -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-file-excel"></i> Importar Datos desde Excel</h3>
+                    <p>Sube un archivo Excel con los datos de los estudiantes</p>
+                </div>
+                <form id="importExcelForm" class="form">
+                    <div class="form-group">
+                        <label for="excelFile">Archivo Excel (.xlsx, .xls):</label>
+                        <input type="file" id="excelFile" accept=".xlsx,.xls" required>
+                        <small>El archivo debe tener columnas: Nombre, ID, Cédula Padre, Grado, Nombre Padre, Teléfono</small>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-upload"></i>
+                        Importar Estudiantes
+                    </button>
+                </form>
+            </div>
+
+            <!-- Add Student Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-user-plus"></i> Registrar Estudiante Individual</h3>
+                    <p>O usa el botón "Agregar Todos los Estudiantes" para agregar los 24 estudiantes de tu planilla</p>
+                    <button id="addAllStudentsBtn" class="btn btn-success" style="margin-top: 10px;">
+                        <i class="fas fa-users"></i>
+                        Agregar 5 Estudiantes de Prueba
+                    </button>
+                    <button id="clearAllBtn" class="btn btn-warning" style="margin-top: 10px; margin-left: 10px;">
+                        <i class="fas fa-trash"></i>
+                        Limpiar Todo
+                    </button>
+                </div>
+                <form id="addStudentForm" class="form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="studentName">Nombre Completo:</label>
+                            <input type="text" id="studentName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentId">ID Estudiante:</label>
+                            <input type="text" id="studentId" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="parentCedula">Cédula del Padre/Madre:</label>
+                            <input type="text" id="parentCedulaAdd" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="grade">Grado:</label>
+                            <select id="grade" required>
+                                <option value="">Seleccionar grado</option>
+                                <option value="1">Primero</option>
+                                <option value="2">Segundo</option>
+                                <option value="3">Tercero</option>
+                                <option value="4">Cuarto</option>
+                                <option value="5">Quinto</option>
+                                <option value="6">Sexto</option>
+                                <option value="7">Séptimo</option>
+                                <option value="8">Octavo</option>
+                                <option value="9">Noveno</option>
+                                <option value="10">Décimo</option>
+                                <option value="11">Once</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Registrar Estudiante
+                    </button>
+                </form>
+            </div>
+
+            <!-- Add Grades Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-edit"></i> Registrar Calificaciones</h3>
+                </div>
+                <form id="addGradeForm" class="form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gradeStudentSelect">Estudiante:</label>
+                            <select id="gradeStudentSelect" required>
+                                <option value="">Seleccionar estudiante</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Materia:</label>
+                            <select id="subject" required>
+                                <option value="">Seleccionar materia</option>
+                                <option value="matematicas">Matemáticas</option>
+                                <option value="espanol">Español</option>
+                                <option value="ciencias">Ciencias Naturales</option>
+                                <option value="sociales">Ciencias Sociales</option>
+                                <option value="ingles">Inglés</option>
+                                <option value="educacion_fisica">Educación Física</option>
+                                <option value="arte">Arte</option>
+                                <option value="religion">Religión</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gradeValue">Nota (0.0 - 5.0):</label>
+                            <input type="number" id="gradeValue" min="0" max="5" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="period">Período:</label>
+                            <select id="period" required>
+                                <option value="">Seleccionar período</option>
+                                <option value="1">Primer Período</option>
+                                <option value="2">Segundo Período</option>
+                                <option value="3">Tercer Período</option>
+                                <option value="4">Cuarto Período</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Descripción:</label>
+                        <textarea id="description" placeholder="Ej: Examen parcial, tarea, proyecto..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i>
+                        Guardar Calificación
+                    </button>
+                </form>
+            </div>
+
+            <!-- Students List -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-users"></i> Lista de Estudiantes</h3>
+                    <div class="card-actions">
+                        <button id="deleteAllStudentsBtn" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i>
+                            Borrar Todos los Estudiantes
+                        </button>
+                        <button id="exportStudentsBtn" class="btn btn-secondary">
+                            <i class="fas fa-download"></i>
+                            Exportar Lista
+                        </button>
+                    </div>
+                </div>
+                <div id="studentsList" class="students-list"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+        <p>Procesando...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="database.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
