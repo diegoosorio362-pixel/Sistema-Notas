@@ -141,6 +141,10 @@
                         <i class="fas fa-file-excel"></i>
                         Importar Excel
                     </button>
+                    <button class="nav-btn" onclick="debugGrades()" style="background: #ffc107; color: #000;">
+                        <i class="fas fa-bug"></i>
+                        Debug Notas
+                    </button>
                 </div>
 
                 <!-- Dashboard Grid -->
@@ -170,20 +174,6 @@
                             <h3><i class="fas fa-user-plus"></i> Registrar Estudiante Individual</h3>
                         </div>
                         <p>Agrega un nuevo estudiante al sistema</p>
-                        <div class="action-buttons">
-                            <button id="addAllStudentsBtn" class="action-btn success">
-                                <i class="fas fa-users"></i>
-                                Agregar 5 Estudiantes de Prueba
-                            </button>
-                    <button id="clearAllBtn" class="action-btn danger">
-                        <i class="fas fa-trash"></i>
-                        Limpiar Todo
-                    </button>
-                    <button id="deleteAllStudentsBtn" class="action-btn danger">
-                        <i class="fas fa-user-times"></i>
-                        Eliminar Todos los Estudiantes
-                    </button>
-                        </div>
                 <form id="addStudentForm" class="form">
                     <div class="form-row">
                         <div class="form-group">
@@ -226,57 +216,221 @@
                     <!-- Add Grades Form -->
                     <div id="add-grades" class="dashboard-card section">
                         <div class="card-header">
-                            <h3><i class="fas fa-edit"></i> Registrar Calificaciones</h3>
+                            <h3><i class="fas fa-graduation-cap"></i> Sistema de Evaluación Académica</h3>
+                            <p class="form-description">Registre las calificaciones de sus estudiantes siguiendo el sistema de evaluación institucional</p>
                         </div>
-                <form id="addGradeForm" class="form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="gradeStudentSelect">Estudiante:</label>
-                            <select id="gradeStudentSelect" required>
-                                <option value="">Seleccionar estudiante</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Materia:</label>
-                            <select id="subject" required>
-                                <option value="">Seleccionar materia</option>
-                                <option value="matematicas">Matemáticas</option>
-                                <option value="espanol">Español</option>
-                                <option value="ciencias">Ciencias Naturales</option>
-                                <option value="sociales">Ciencias Sociales</option>
-                                <option value="ingles">Inglés</option>
-                                <option value="educacion_fisica">Educación Física</option>
-                                <option value="arte">Arte</option>
-                                <option value="religion">Religión</option>
-                            </select>
-                        </div>
+                        
+                        <form id="addGradeForm" class="professional-form">
+                            <!-- Sección 1: Información del Estudiante -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-user-graduate"></i> Información del Estudiante</h4>
+                                </div>
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label for="studentDocumentInput">
+                                            <i class="fas fa-id-card"></i>
+                                            Documento de Identidad
+                                        </label>
+                                        <input type="text" id="studentDocumentInput" placeholder="Ingrese el número de documento" required>
+                                        <small class="form-help">Ejemplo: 1117265419</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="studentNameDisplay">
+                                            <i class="fas fa-user"></i>
+                                            Nombre del Estudiante
+                                        </label>
+                                        <input type="text" id="studentNameDisplay" placeholder="Se completará automáticamente" readonly class="readonly-field">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección 2: Materia y Período -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-book"></i> Información Académica</h4>
+                                </div>
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label for="subject">
+                                            <i class="fas fa-chalkboard"></i>
+                                            Materia
+                                        </label>
+                                        <select id="subject" required>
+                                            <option value="">Seleccione una materia</option>
+                                            <option value="matematicas">Matemáticas</option>
+                                            <option value="espanol">Español</option>
+                                            <option value="ciencias">Ciencias Naturales</option>
+                                            <option value="sociales">Ciencias Sociales</option>
+                                            <option value="ingles">Inglés</option>
+                                            <option value="educacion_fisica">Educación Física</option>
+                                            <option value="arte">Arte</option>
+                                            <option value="religion">Religión</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="period">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            Período Académico
+                                        </label>
+                                        <select id="period" required>
+                                            <option value="">Seleccione el período</option>
+                                            <option value="1">Primer Período</option>
+                                            <option value="2">Segundo Período</option>
+                                            <option value="3">Tercer Período</option>
+                                            <option value="4">Cuarto Período</option>
+                                        </select>
+                                        <small class="form-help period-sync-info">
+                                            <i class="fas fa-sync-alt"></i>
+                                            Se aplicará automáticamente a todas las notas
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección 3: Sistema de Evaluación -->
+                            <div class="form-section">
+                                        <div class="section-header">
+                                            <h4><i class="fas fa-chart-line"></i> Sistema de Evaluación Institucional</h4>
+                                            <p class="evaluation-info">Haga clic en una categoría para registrar las notas correspondientes</p>
+                                            <div class="evaluation-explanation">
+                                                <i class="fas fa-info-circle"></i>
+                                                <span>Los porcentajes de cada categoría se distribuyen automáticamente entre las notas para sumar 100% de esa categoría</span>
+                                            </div>
+                                        </div>
+                                
+                                <!-- Componentes del Sistema de Evaluación -->
+                                <div class="evaluation-components">
+                                    <div class="component saber-component clickable-component" data-category="saber" onclick="selectEvaluationCategory('saber')">
+                                        <div class="component-header">
+                                            <div class="component-icon">🧠</div>
+                                            <div class="component-info">
+                                                <h5>Saber</h5>
+                                                <p>Conocimientos</p>
+                                            </div>
+                                            <div class="component-percentage">40%</div>
+                                        </div>
+                                        <div class="component-bar">
+                                            <div class="progress-fill saber-fill"></div>
+                                        </div>
+                                        <div class="component-action">
+                                            <i class="fas fa-mouse-pointer"></i>
+                                            <span>Hacer clic para registrar notas</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="component hacer-component clickable-component" data-category="hacer" onclick="selectEvaluationCategory('hacer')">
+                                        <div class="component-header">
+                                            <div class="component-icon">🛠️</div>
+                                            <div class="component-info">
+                                                <h5>Hacer</h5>
+                                                <p>Competencias</p>
+                                            </div>
+                                            <div class="component-percentage">40%</div>
+                                        </div>
+                                        <div class="component-bar">
+                                            <div class="progress-fill hacer-fill"></div>
+                                        </div>
+                                        <div class="component-action">
+                                            <i class="fas fa-mouse-pointer"></i>
+                                            <span>Hacer clic para registrar notas</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="component ser-component clickable-component" data-category="ser" onclick="selectEvaluationCategory('ser')">
+                                        <div class="component-header">
+                                            <div class="component-icon">👤</div>
+                                            <div class="component-info">
+                                                <h5>Ser</h5>
+                                                <p>Actitudes</p>
+                                            </div>
+                                            <div class="component-percentage">20%</div>
+                                        </div>
+                                        <div class="component-bar">
+                                            <div class="progress-fill ser-fill"></div>
+                                        </div>
+                                        <div class="component-action">
+                                            <i class="fas fa-mouse-pointer"></i>
+                                            <span>Hacer clic para registrar notas</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Selección de Categoría -->
+                                <div class="evaluation-selection">
+                                    <div class="form-group">
+                                        <label for="evaluationCategory">
+                                            <i class="fas fa-tasks"></i>
+                                            Categoría de Evaluación
+                                        </label>
+                                        <select id="evaluationCategory" required>
+                                            <option value="">Seleccione una categoría</option>
+                                            <option value="saber">
+                                                🧠 Saber - Conocimientos (40%)
+                                            </option>
+                                            <option value="hacer">
+                                                🛠️ Hacer - Competencias (40%)
+                                            </option>
+                                            <option value="ser">
+                                                👤 Ser - Actitudes (20%)
+                                            </option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Contenedor para notas dinámicas -->
+                                    <div id="notesContainer" class="notes-container" style="display: none;">
+                                        <div class="notes-header">
+                                            <h5><i class="fas fa-edit"></i> Registro de Notas</h5>
+                                            <div class="notes-header-right">
+                                                <div id="totalPercentage" class="total-percentage">
+                                                    <span class="percentage-label">Total de la categoría:</span>
+                                                    <span class="percentage-value">0%</span>
+                                                </div>
+                                                <button type="button" id="addNoteBtn" class="btn-add-note">
+                                                    <i class="fas fa-plus"></i>
+                                                    Agregar Nota
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="notesList" class="notes-list">
+                                            <!-- Las notas se generarán dinámicamente aquí -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección 4: Calificación -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-star"></i> Calificación</h4>
+                                </div>
+                                <div class="grade-input-container">
+                                    <div class="form-group">
+                                        <label for="gradeValue">
+                                            <i class="fas fa-percentage"></i>
+                                            Nota (Escala 0.0 - 5.0)
+                                        </label>
+                                        <div class="grade-input-wrapper">
+                                            <input type="number" id="gradeValue" min="0" max="5" step="0.1" required class="grade-input">
+                                            <div class="grade-scale">
+                                                <span class="scale-min">0.0</span>
+                                                <span class="scale-max">5.0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botón de envío -->
+                            <div class="form-actions">
+                                <button type="submit" class="btn-professional">
+                                    <i class="fas fa-save"></i>
+                                    <span>Registrar Calificación</span>
+                                    <div class="btn-shine"></div>
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="gradeValue">Nota (0.0 - 5.0):</label>
-                            <input type="number" id="gradeValue" min="0" max="5" step="0.1" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="period">Período:</label>
-                            <select id="period" required>
-                                <option value="">Seleccionar período</option>
-                                <option value="1">Primer Período</option>
-                                <option value="2">Segundo Período</option>
-                                <option value="3">Tercer Período</option>
-                                <option value="4">Cuarto Período</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Descripción:</label>
-                        <textarea id="description" placeholder="Ej: Examen parcial, tarea, proyecto..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save"></i>
-                        Guardar Calificación
-                    </button>
-                </form>
-            </div>
 
                     <!-- Students List -->
                     <div id="students-list" class="dashboard-card section">

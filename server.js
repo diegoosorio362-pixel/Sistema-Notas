@@ -17,6 +17,7 @@ app.use(express.static('.'));
 // Base de datos en memoria (desde CSV)
 let students = [];
 let teachers = [];
+let grades = [];
 
 // Cargar profesores desde CSV
 function loadTeachersFromCSV() {
@@ -76,6 +77,79 @@ function saveStudentsToCSV() {
         })
         .catch((error) => {
             console.error('❌ Error al guardar CSV:', error);
+        });
+}
+
+// Función para cargar calificaciones desde CSV
+function loadGradesFromCSV() {
+    const csvPath = path.join(__dirname, 'grades.csv');
+    
+    if (fs.existsSync(csvPath)) {
+        console.log(`📊 Cargando calificaciones desde CSV: ${csvPath}`);
+        
+        fs.createReadStream(csvPath)
+            .pipe(csv())
+            .on('data', (row) => {
+                const grade = {
+                    studentId: row.documento || row.studentId,
+                    studentName: row.nombre || row.studentName,
+                    subject: row.materia || row.subject,
+                    saber: row.saber ? parseFloat(row.saber) : null,
+                    hacer: row.hacer ? parseFloat(row.hacer) : null,
+                    ser: row.ser ? parseFloat(row.ser) : null,
+                    period: row.periodo || row.period,
+                    description: row.descripcion || row.description,
+                    timestamp: row.timestamp || new Date().toISOString()
+                };
+                grades.push(grade);
+            })
+            .on('end', () => {
+                console.log(`✅ ${grades.length} calificaciones cargadas desde CSV`);
+            })
+            .on('error', (error) => {
+                console.error('❌ Error al leer CSV de calificaciones:', error);
+            });
+    } else {
+        console.log('⚠️ Archivo grades.csv no encontrado, empezando con array vacío');
+    }
+}
+
+// Función para guardar calificaciones en CSV
+function saveGradesToCSV() {
+    const csvPath = 'grades.csv';
+    const writer = csvWriter.createObjectCsvWriter({
+        path: csvPath,
+        header: [
+            {id: 'documento', title: 'documento'},
+            {id: 'nombre', title: 'nombre'},
+            {id: 'materia', title: 'materia'},
+            {id: 'saber', title: 'saber'},
+            {id: 'hacer', title: 'hacer'},
+            {id: 'ser', title: 'ser'},
+            {id: 'periodo', title: 'periodo'},
+            {id: 'descripcion', title: 'descripcion'},
+            {id: 'timestamp', title: 'timestamp'}
+        ]
+    });
+    
+    const data = grades.map(grade => ({
+        documento: grade.studentId,
+        nombre: grade.studentName,
+        materia: grade.subject,
+        saber: grade.saber || '',
+        hacer: grade.hacer || '',
+        ser: grade.ser || '',
+        periodo: grade.period,
+        descripcion: grade.description || '',
+        timestamp: grade.timestamp
+    }));
+    
+    writer.writeRecords(data)
+        .then(() => {
+            console.log(`✅ ${grades.length} calificaciones guardadas en ${csvPath}`);
+        })
+        .catch((error) => {
+            console.error('❌ Error al guardar CSV de calificaciones:', error);
         });
 }
 
@@ -198,6 +272,94 @@ app.delete('/api/students/:id', (req, res) => {
     }
 });
 
+// Rutas API para Calificaciones
+
+// GET /api/grades - Obtener todas las calificaciones
+app.get('/api/grades', (req, res) => {
+    console.log(`📊 Consultando ${grades.length} calificaciones`);
+    res.json(grades);
+});
+
+// GET /api/grades/student/:studentId - Obtener calificaciones de un estudiante
+app.get('/api/grades/student/:studentId', (req, res) => {
+    const studentId = req.params.studentId;
+    const studentGrades = grades.filter(grade => 
+        grade.studentId === studentId || grade.studentId === studentId
+    );
+    console.log(`📊 Consultando calificaciones del estudiante ${studentId}: ${studentGrades.length} encontradas`);
+    res.json(studentGrades);
+});
+
+// POST /api/grades - Crear nueva calificación
+app.post('/api/grades', (req, res) => {
+    const newGrade = req.body;
+    
+    // Convertir las categorías a la nueva estructura
+    const gradeData = {
+        studentId: newGrade.studentId,
+        studentName: newGrade.studentName,
+        subject: newGrade.subject,
+        saber: newGrade.evaluationCategory === 'saber' ? newGrade.grade : null,
+        hacer: newGrade.evaluationCategory === 'hacer' ? newGrade.grade : null,
+        ser: newGrade.evaluationCategory === 'ser' ? newGrade.grade : null,
+        period: newGrade.period,
+        description: newGrade.description,
+        timestamp: newGrade.timestamp || new Date().toISOString()
+    };
+    
+    grades.push(gradeData);
+    
+    console.log(`➕ Calificación agregada: ${newGrade.studentName} - ${newGrade.subject} - ${newGrade.evaluationCategory}: ${newGrade.grade}`);
+    
+    // Guardar en CSV
+    saveGradesToCSV();
+    
+    res.json({ message: 'Calificación creada exitosamente', grade: gradeData });
+});
+
+// PUT /api/grades/:id - Actualizar calificación existente
+app.put('/api/grades/:id', (req, res) => {
+    const gradeId = req.params.id;
+    const updateData = req.body;
+    
+    const gradeIndex = grades.findIndex(grade => grade.timestamp === gradeId);
+    
+    if (gradeIndex !== -1) {
+        // Actualizar la calificación existente
+        grades[gradeIndex] = {
+            ...grades[gradeIndex],
+            ...updateData
+        };
+        
+        console.log(`📝 Calificación actualizada: ${gradeId}`);
+        
+        // Guardar en CSV
+        saveGradesToCSV();
+        
+        res.json({ message: 'Calificación actualizada exitosamente', grade: grades[gradeIndex] });
+    } else {
+        console.log(`❌ Calificación no encontrada: ${gradeId}`);
+        res.status(404).json({ message: 'Calificación no encontrada' });
+    }
+});
+
+// DELETE /api/grades/:id - Eliminar calificación
+app.delete('/api/grades/:id', (req, res) => {
+    const gradeId = req.params.id;
+    const initialLength = grades.length;
+    
+    grades = grades.filter(grade => grade.timestamp !== gradeId);
+    
+    if (grades.length < initialLength) {
+        console.log(`🗑️ Calificación eliminada: ${gradeId}`);
+        saveGradesToCSV();
+        res.json({ message: 'Calificación eliminada exitosamente' });
+    } else {
+        console.log(`❌ Calificación no encontrada: ${gradeId}`);
+        res.status(404).json({ message: 'Calificación no encontrada' });
+    }
+});
+
 // GET /api/teachers - Obtener todos los profesores
 app.get('/api/teachers', (req, res) => {
     console.log(`👨‍🏫 Consultando ${teachers.length} profesores`);
@@ -228,6 +390,7 @@ app.get('/', (req, res) => {
 // Inicializar servidor
 loadTeachersFromCSV();
 loadStudentsFromCSV();
+loadGradesFromCSV();
 
 app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
