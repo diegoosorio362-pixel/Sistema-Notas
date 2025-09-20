@@ -91,15 +91,18 @@ function loadGradesFromCSV() {
             .pipe(csv())
             .on('data', (row) => {
                 const grade = {
-                    studentId: row.documento || row.studentId,
-                    studentName: row.nombre || row.studentName,
-                    subject: row.materia || row.subject,
-                    saber: row.saber ? parseFloat(row.saber) : null,
-                    hacer: row.hacer ? parseFloat(row.hacer) : null,
-                    ser: row.ser ? parseFloat(row.ser) : null,
-                    period: row.periodo || row.period,
-                    description: row.descripcion || row.description,
-                    timestamp: row.timestamp || new Date().toISOString()
+                    documento: row.documento,
+                    nombre: row.nombre,
+                    materia: row.materia,
+                    categoria: row.categoria,
+                    subcategoria: row.subcategoria,
+                    nota: parseFloat(row.nota),
+                    periodo: row.periodo,
+                    descripcion: row.descripcion,
+                    fecha: row.fecha,
+                    saberGrade: row.saberGrade || null,
+                    hacerGrade: row.hacerGrade || null,
+                    serGrade: row.serGrade || null
                 };
                 grades.push(grade);
             })
@@ -123,25 +126,31 @@ function saveGradesToCSV() {
             {id: 'documento', title: 'documento'},
             {id: 'nombre', title: 'nombre'},
             {id: 'materia', title: 'materia'},
-            {id: 'saber', title: 'saber'},
-            {id: 'hacer', title: 'hacer'},
-            {id: 'ser', title: 'ser'},
+            {id: 'categoria', title: 'categoria'},
+            {id: 'subcategoria', title: 'subcategoria'},
+            {id: 'nota', title: 'nota'},
             {id: 'periodo', title: 'periodo'},
             {id: 'descripcion', title: 'descripcion'},
-            {id: 'timestamp', title: 'timestamp'}
+            {id: 'fecha', title: 'fecha'},
+            {id: 'saberGrade', title: 'saberGrade'},
+            {id: 'hacerGrade', title: 'hacerGrade'},
+            {id: 'serGrade', title: 'serGrade'}
         ]
     });
     
     const data = grades.map(grade => ({
-        documento: grade.studentId,
-        nombre: grade.studentName,
-        materia: grade.subject,
-        saber: grade.saber || '',
-        hacer: grade.hacer || '',
-        ser: grade.ser || '',
-        periodo: grade.period,
-        descripcion: grade.description || '',
-        timestamp: grade.timestamp
+        documento: grade.documento,
+        nombre: grade.nombre,
+        materia: grade.materia,
+        categoria: grade.categoria,
+        subcategoria: grade.subcategoria,
+        nota: grade.nota,
+        periodo: grade.periodo,
+        descripcion: grade.descripcion,
+        fecha: grade.fecha,
+        saberGrade: grade.saberGrade || '',
+        hacerGrade: grade.hacerGrade || '',
+        serGrade: grade.serGrade || ''
     }));
     
     writer.writeRecords(data)
@@ -155,42 +164,41 @@ function saveGradesToCSV() {
 
 // Cargar estudiantes desde CSV
 function loadStudentsFromCSV() {
-    // Buscar archivo CSV (puede tener diferentes nombres)
-    const possibleNames = ['example run.csv', 'students.csv', 'estudiantes.csv'];
-    let csvPath = null;
+    const csvPath = path.join(__dirname, 'students.csv');
     
-    for (const name of possibleNames) {
-        const testPath = path.join(__dirname, 'data', name);
-        if (fs.existsSync(testPath)) {
-            csvPath = testPath;
-            break;
-        }
-    }
-    
-    // También buscar en la raíz del proyecto
-    if (!csvPath) {
-        for (const name of possibleNames) {
-            const testPath = path.join(__dirname, name);
-            if (fs.existsSync(testPath)) {
-                csvPath = testPath;
-                break;
-            }
-        }
-    }
-    
-    if (csvPath && fs.existsSync(csvPath)) {
+    if (fs.existsSync(csvPath)) {
         console.log(`📊 Cargando estudiantes desde CSV: ${csvPath}`);
         
         fs.createReadStream(csvPath)
             .pipe(csv())
             .on('data', (row) => {
-                // Convertir filas del CSV a objetos estudiantes
+                // Convertir filas del CSV a objetos estudiantes con nueva estructura completa
+                const saber_pg = parseFloat(row.saber_pg) || 0;
+                const hacer_pg = parseFloat(row.hacer_pg) || 0;
+                const ser_pg = parseFloat(row.ser_pg) || 0;
+                
+                // Calcular nota final: (SABER × 40%) + (HACER × 40%) + (SER × 20%)
+                const nota_final = (saber_pg * 0.4) + (hacer_pg * 0.4) + (ser_pg * 0.2);
+                
                 const student = {
-                    id: row.documento || row.id,
-                    name: row.nombre || row.name,
-                    documento: row.documento || row.id,
-                    parentCedula: row.documento || row.id,
-                    grade: row.grado || row.grade || '10'
+                    id: row.id,
+                    name: row.nombre,
+                    documento: row.documento,
+                    parentCedula: row.documento,
+                    grade: '10',
+                    // Notas individuales
+                    saber_n1: parseFloat(row.saber_n1) || 0,
+                    saber_n2: parseFloat(row.saber_n2) || 0,
+                    saber_pg: saber_pg,
+                    hacer_n3: parseFloat(row.hacer_n3) || 0,
+                    hacer_n4: parseFloat(row.hacer_n4) || 0,
+                    hacer_pg: hacer_pg,
+                    ser_n5: parseFloat(row.ser_n5) || 0,
+                    ser_pg: ser_pg,
+                    nota_falla: parseInt(row.nota_falla) || 0,
+                    falla_j: parseInt(row.falla_j) || 0,
+                    // Nota final calculada
+                    nota_final: nota_final
                 };
                 students.push(student);
             })
@@ -198,14 +206,14 @@ function loadStudentsFromCSV() {
                 console.log(`✅ ${students.length} estudiantes cargados desde CSV`);
             })
             .on('error', (error) => {
-                console.error('❌ Error al leer CSV:', error);
+                console.error('❌ Error al leer CSV de estudiantes:', error);
             });
     } else {
-        console.log('⚠️ Archivo CSV no encontrado, usando datos de ejemplo');
-        // Datos de ejemplo si no hay CSV (simplificado)
+        console.log('⚠️ Archivo students.csv no encontrado, usando datos de ejemplo');
+        // Datos de ejemplo si no hay CSV
         students = [
             {
-                id: '1117265419',
+                id: '1',
                 name: 'BLANDON BELLO JHON DANIER',
                 documento: '1117265419',
                 parentCedula: '1117265419',
@@ -252,6 +260,25 @@ app.post('/api/students', (req, res) => {
     res.json({ message: 'Estudiante creado exitosamente', student: newStudent });
 });
 
+// DELETE /api/students/delete-all - Eliminar todos los estudiantes (DEBE IR ANTES de /:id)
+app.delete('/api/students/delete-all', (req, res) => {
+    const initialLength = students.length;
+    
+    if (initialLength === 0) {
+        res.json({ message: 'No hay estudiantes para eliminar' });
+        return;
+    }
+    
+    students = [];
+    
+    console.log(`🗑️ Todos los estudiantes eliminados (${initialLength} estudiantes)`);
+    
+    // Guardar CSV vacío
+    saveStudentsToCSV();
+    
+    res.json({ message: `${initialLength} estudiantes eliminados exitosamente` });
+});
+
 // DELETE /api/students/:id - Eliminar estudiante
 app.delete('/api/students/:id', (req, res) => {
     const studentId = req.params.id;
@@ -284,32 +311,42 @@ app.get('/api/grades', (req, res) => {
 app.get('/api/grades/student/:studentId', (req, res) => {
     const studentId = req.params.studentId;
     const studentGrades = grades.filter(grade => 
-        grade.studentId === studentId || grade.studentId === studentId
+        grade.studentId === studentId || grade.documento === studentId
     );
     console.log(`📊 Consultando calificaciones del estudiante ${studentId}: ${studentGrades.length} encontradas`);
     res.json(studentGrades);
 });
 
+
 // POST /api/grades - Crear nueva calificación
 app.post('/api/grades', (req, res) => {
     const newGrade = req.body;
     
-    // Convertir las categorías a la nueva estructura
+    // Estructura simplificada y directa
     const gradeData = {
-        studentId: newGrade.studentId,
-        studentName: newGrade.studentName,
-        subject: newGrade.subject,
-        saber: newGrade.evaluationCategory === 'saber' ? newGrade.grade : null,
-        hacer: newGrade.evaluationCategory === 'hacer' ? newGrade.grade : null,
-        ser: newGrade.evaluationCategory === 'ser' ? newGrade.grade : null,
-        period: newGrade.period,
-        description: newGrade.description,
-        timestamp: newGrade.timestamp || new Date().toISOString()
+        documento: newGrade.studentId,
+        nombre: newGrade.studentName,
+        materia: newGrade.subject,
+        categoria: newGrade.evaluationCategory,
+        subcategoria: newGrade.subcategory || 'General',
+        nota: newGrade.grade,
+        periodo: newGrade.period,
+        descripcion: newGrade.description || '',
+        fecha: new Date().toISOString().split('T')[0], // Solo la fecha
+        // Campos adicionales para calificaciones completas
+        saberGrade: newGrade.saberGrade || null,
+        hacerGrade: newGrade.hacerGrade || null,
+        serGrade: newGrade.serGrade || null
     };
     
     grades.push(gradeData);
     
-    console.log(`➕ Calificación agregada: ${newGrade.studentName} - ${newGrade.subject} - ${newGrade.evaluationCategory}: ${newGrade.grade}`);
+    if (newGrade.evaluationCategory === 'completa') {
+        console.log(`➕ Calificación COMPLETA agregada: ${newGrade.studentName} - ${newGrade.subject} - Nota Final: ${newGrade.grade}`);
+        console.log(`   📊 SABER: ${newGrade.saberGrade}, HACER: ${newGrade.hacerGrade}, SER: ${newGrade.serGrade}`);
+    } else {
+        console.log(`➕ Calificación agregada: ${newGrade.studentName} - ${newGrade.subject} - ${newGrade.evaluationCategory}: ${newGrade.grade}`);
+    }
     
     // Guardar en CSV
     saveGradesToCSV();
@@ -341,6 +378,25 @@ app.put('/api/grades/:id', (req, res) => {
         console.log(`❌ Calificación no encontrada: ${gradeId}`);
         res.status(404).json({ message: 'Calificación no encontrada' });
     }
+});
+
+// DELETE /api/grades/delete-all - Eliminar todas las calificaciones (DEBE IR ANTES de /:id)
+app.delete('/api/grades/delete-all', (req, res) => {
+    const initialLength = grades.length;
+    
+    if (initialLength === 0) {
+        res.json({ message: 'No hay calificaciones para eliminar' });
+        return;
+    }
+    
+    grades = [];
+    
+    console.log(`🗑️ Todas las calificaciones eliminadas (${initialLength} calificaciones)`);
+    
+    // Guardar CSV vacío
+    saveGradesToCSV();
+    
+    res.json({ message: `${initialLength} calificaciones eliminadas exitosamente` });
 });
 
 // DELETE /api/grades/:id - Eliminar calificación
@@ -421,6 +477,54 @@ app.post('/api/save-temp-notes', (req, res) => {
         res.status(500).json({ error: 'Error al guardar notas temporales' });
     }
 });
+
+// Función para cargar profesores desde CSV
+function loadTeachersFromCSV() {
+    const csvPath = path.join(__dirname, 'teachers.csv');
+    
+    if (fs.existsSync(csvPath)) {
+        console.log(`📊 Cargando profesores desde CSV: ${csvPath}`);
+        
+        fs.createReadStream(csvPath)
+            .pipe(csv())
+            .on('data', (row) => {
+                const teacher = {
+                    id: row.id,
+                    email: row.username, // Usar username como email para compatibilidad
+                    username: row.username,
+                    password: row.password,
+                    name: row.name
+                };
+                teachers.push(teacher);
+            })
+            .on('end', () => {
+                console.log(`✅ ${teachers.length} profesores cargados desde CSV`);
+            })
+            .on('error', (error) => {
+                console.error('❌ Error al leer CSV de profesores:', error);
+            });
+    } else {
+        console.log('⚠️ Archivo teachers.csv no encontrado, usando datos de ejemplo');
+        // Datos de ejemplo si no hay CSV
+        teachers = [
+            {
+                id: '1',
+                email: 'profesor@escuela.edu',
+                username: 'profesor@escuela.edu',
+                password: '123456',
+                name: 'Profesor Principal'
+            },
+            {
+                id: '2',
+                email: 'admin@escuela.edu',
+                username: 'admin@escuela.edu',
+                password: 'admin123',
+                name: 'Administrador'
+            }
+        ];
+    }
+}
+
 
 // Inicializar servidor
 loadTeachersFromCSV();

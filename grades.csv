@@ -1,2 +1,2 @@
-documento,nombre,materia,saber,hacer,ser,periodo,descripcion,timestamp
-1117265419,BLANDON BELLO JHON DANIER  ,,,,,,,2025-09-18T19:09:57.948Z
+documento,nombre,materia,categoria,subcategoria,nota,periodo,descripcion,fecha,saberGrade,hacerGrade,serGrade
+1117265461,ORTIZ CABEZAS MAUREN DAYANA  ,matematicas,completa,Nota Final,2,3,SABER: 2.00 + HACER: 2.00 + SER: 2.00,2025-09-20,2,2,2

@@ -145,6 +145,10 @@
                         <i class="fas fa-bug"></i>
                         Debug Notas
                     </button>
+                    <button id="deleteAllGradesBtn" class="nav-btn" style="background: #dc3545; color: white;">
+                        <i class="fas fa-trash-alt"></i>
+                        Eliminar Calificaciones
+                    </button>
                 </div>
 
                 <!-- Dashboard Grid -->
@@ -384,7 +388,7 @@
                                             <div class="notes-header-right">
                                                 <div id="totalPercentage" class="total-percentage">
                                                     <span class="percentage-label">Total de la categoría:</span>
-                                                    <span class="percentage-value">0%</span>
+                                                    <span class="percentage-value">0.0%</span>
                                                 </div>
                                                 <button type="button" id="addNoteBtn" class="btn-add-note">
                                                     <i class="fas fa-plus"></i>
@@ -453,7 +457,11 @@
                                     <div class="calculation-actions">
                                         <button type="button" id="calculateGradeBtn" class="btn-calculate">
                                             <i class="fas fa-calculator"></i>
-                                            Calcular Nota Final
+                                            🎯 Calcular y Registrar Nota Final Completa
+                                        </button>
+                                        <button type="button" id="registerCompleteGradeBtn" class="btn-register-complete" style="display: none;">
+                                            <i class="fas fa-check-circle"></i>
+                                            🎯 Registrar Nota Final Completa
                                         </button>
                                         <button type="button" id="clearFormBtn" class="btn-clear">
                                             <i class="fas fa-trash-alt"></i>
@@ -487,6 +495,14 @@
                                 <i class="fas fa-download"></i>
                                 Exportar Lista
                             </button>
+                            <button id="deleteAllStudentsBtn" class="action-btn danger">
+                                <i class="fas fa-trash-alt"></i>
+                                Eliminar Todos
+                            </button>
+                            <button id="deleteAllGradesBtn" class="action-btn warning">
+                                <i class="fas fa-graduation-cap"></i>
+                                Eliminar Calificaciones
+                            </button>
                         </div>
                         <div id="studentsList" class="students-list"></div>
                     </div>
@@ -503,6 +519,34 @@
 
     <!-- Toast Notifications -->
     <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Modal de confirmación de registro -->
+    <div id="registrationModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="modal-title">¡Nota Registrada Exitosamente!</h3>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message" id="modalMessage">La nota ha sido registrada correctamente.</p>
+                <div class="modal-details" id="modalDetails">
+                    <!-- Los detalles se llenarán dinámicamente -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-primary" onclick="closeRegistrationModal()">
+                    <i class="fas fa-check"></i>
+                    Entendido
+                </button>
+                <button type="button" class="modal-btn modal-btn-secondary" onclick="closeRegistrationModal()">
+                    <i class="fas fa-times"></i>
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

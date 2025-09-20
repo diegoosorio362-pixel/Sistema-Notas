@@ -1,3 +1,6 @@
 id,username,password,name
 1,profesor,123456,Profesor Principal
 2,admin,admin123,Administrador
+3,matematicas,math123,Profesor de Matematicas
+4,espanol,spanish123,Profesora de Espanol
+5,ciencias,science123,Profesor de Ciencias

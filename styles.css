@@ -1,8 +1,30 @@
-/* Reset and Base Styles */
+/* Reset and Base Styles - Optimizado */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+/* Optimizaciones de rendimiento */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    will-change: auto;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Clases para animaciones optimizadas */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Section Navigation */
@@ -470,6 +492,175 @@
     justify-content: center;
     gap: 15px;
     flex-wrap: wrap;
+}
+
+/* Modal de Registro */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 25px;
+    border-radius: 20px 20px 0 0;
+    text-align: center;
+}
+
+.modal-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    animation: bounceIn 0.6s ease;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-message {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-details {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.modal-details h4 {
+    color: #495057;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.modal-details .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.modal-details .detail-row:last-child {
+    border-bottom: none;
+}
+
+.modal-details .detail-label {
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.modal-details .detail-value {
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.modal-footer {
+    padding: 20px 25px;
+    border-radius: 0 0 20px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.modal-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-btn-primary {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.modal-btn-primary:hover {
+    background: linear-gradient(135deg, #218838, #1e7e34);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+.modal-btn-secondary {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+}
+
+.modal-btn-secondary:hover {
+    background: linear-gradient(135deg, #5a6268, #343a40);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+}
+
+/* Animaciones del Modal */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Sistema de Evaluación - Componentes Visuales */
@@ -1978,4 +2169,56 @@ body {
         right: 10px;
         top: 10px;
     }
+}
+
+/* Estilos para botón de registro completo */
+.btn-register-complete {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-register-complete:hover {
+    background: linear-gradient(135deg, #20c997, #17a2b8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+}
+
+.btn-register-complete:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(40, 167, 69, 0.3);
+}
+
+/* Estilos mejorados para el botón principal de cálculo */
+.btn-calculate {
+    background: linear-gradient(135deg, #007bff, #0056b3) !important;
+    color: white !important;
+    border: none !important;
+    padding: 16px 32px !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.btn-calculate:hover {
+    background: linear-gradient(135deg, #0056b3, #004085) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.5) !important;
+}
+
+.btn-calculate:active {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4) !important;
 }
