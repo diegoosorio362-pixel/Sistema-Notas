@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Favicon Generator</title>
+</head>
+<body>
+    <canvas id="favicon" width="32" height="32" style="display:none;"></canvas>
+    <script>
+        const canvas = document.getElementById('favicon');
+        const ctx = canvas.getContext('2d');
+        
+        // Crear gradiente de fondo
+        const gradient = ctx.createLinearGradient(0, 0, 32, 32);
+        gradient.addColorStop(0, '#3B82F6');
+        gradient.addColorStop(1, '#8B5CF6');
+        
+        // Dibujar fondo
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 32, 32);
+        
+        // Dibujar rectángulo blanco (libro)
+        ctx.fillStyle = 'white';
+        ctx.fillRect(8, 12, 16, 8);
+        
+        // Dibujar líneas del libro
+        ctx.fillStyle = '#8B5CF6';
+        ctx.fillRect(10, 14, 12, 1);
+        ctx.fillRect(10, 16, 12, 1);
+        ctx.fillRect(10, 18, 12, 1);
+        
+        // Convertir a data URL y establecer como favicon
+        const dataURL = canvas.toDataURL('image/png');
+        const link = document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = dataURL;
+        document.getElementsByTagName('head')[0].appendChild(link);
+        
+        console.log('Favicon generado exitosamente');
+    </script>
+</body>
+</html>

@@ -3,551 +3,2857 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión de Notas Escolares</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
-    <!-- SQL.js for database -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <title>Sistema de Notas - Gestión Académica</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0idXJsKCNncmFkaWVudCkiLz4KPHBhdGggZD0iTTggMTJIMjRWMjBIOFYxMloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMCAxNEgyMlYxOEgxMFYxNFoiIGZpbGw9IiM4QjVDRjYiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQiIHgxPSIwIiB5MT0iMCIgeDI9IjMyIiB5Mj0iMzIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzM4MjhGNiIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM4QjVDRjYiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K">
+    <link rel="shortcut icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0idXJsKCNncmFkaWVudCkiLz4KPHBhdGggZD0iTTggMTJIMjRWMjBIOFYxMloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMCAxNEgyMlYxOEgxMFYxNFoiIGZpbGw9IiM4QjVDRjYiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQiIHgxPSIwIiB5MT0iMCIgeDI9IjMyIiB5Mj0iMzIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzM4MjhGNiIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM4QjVDRjYiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .container {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .container {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            background: 
+                linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 25%, rgba(51, 65, 85, 0.85) 50%, rgba(71, 85, 105, 0.8) 75%, rgba(100, 116, 139, 0.75) 100%);
+            -webkit-backdrop-filter: blur(40px);
+            backdrop-filter: blur(40px);
+            color: white;
+            padding: 2rem 3rem;
+            margin: 0;
+            border-radius: 0;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.03) 50%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-left h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-left p {
+            font-size: 1.1rem;
+            margin: 0.5rem 0 0 0;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .user-info span {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .dashboard-header {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .dashboard-subtitle {
+            font-size: 1.1rem;
+            color: #64748b;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            padding: 2rem 2rem 1rem 2rem;
+            margin: -2rem -2rem 0 -2rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card-header:hover {
+            background: #f1f5f9;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-toggle-icon {
+            font-size: 1rem;
+            color: #64748b;
+            transition: transform 0.3s ease;
+        }
+
+        .card-content {
+            max-height: 0;
+            opacity: 0;
+            padding: 0 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .card.expanded .card-content {
+            max-height: 1000px;
+            opacity: 1;
+            padding: 2rem;
+        }
+
+        .card.expanded .card-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .card.collapsed .card-content {
+            max-height: 0;
+            opacity: 0;
+            padding: 0 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            background: #ffffff;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-success {
+            background: #10b981;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-info {
+            background: #06b6d4;
+        }
+
+        .btn-info:hover {
+            background: #0891b2;
+            box-shadow: 0 4px 8px rgba(6, 182, 212, 0.3);
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .card h3 {
+            color: #1e293b;
+            margin-bottom: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .card h3 i {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.3));
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 
+                0 0 0 4px rgba(139, 92, 246, 0.1),
+                0 10px 30px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #06b6d4 100%);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 15px 35px rgba(139, 92, 246, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+        }
+
+        .btn-success:hover {
+            box-shadow: 
+                0 15px 35px rgba(16, 185, 129, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%);
+        }
+
+        .btn-info:hover {
+            box-shadow: 
+                0 15px 35px rgba(6, 182, 212, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .students-list {
+            max-height: 450px;
+            overflow-y: auto;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .students-list::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .students-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .students-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4);
+            border-radius: 5px;
+        }
+
+        .student-item {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .student-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .student-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .student-item strong {
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+        .student-item small {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            font-weight: 500;
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 3;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .grade-item {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 1.5rem;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 3;
+        }
+
+        .grade-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .grade-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .grade-info {
+            flex: 1;
+        }
+
+        .grade-info strong {
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+        .grade-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            color: white;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .grade-date {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.5rem;
+        }
+
+        .subject-badge {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 10px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Estilos Profesionales para Consulta de Notas */
+        .query-results-container {
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(25px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .query-results-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #059669, #047857);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .query-results-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(5, 150, 105, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .query-results-container:hover::after {
+            opacity: 1;
+        }
+
+        .student-profile-card {
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .student-profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .student-info h4 {
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: 0.5px;
+        }
+
+        .student-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .student-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .grades-summary {
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .grades-summary h5 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .grades-summary h5 i {
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .grade-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grade-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .grade-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .grade-subject {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .grade-score {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .grade-date {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .no-grades-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .no-grades-message i {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .no-grades-message h4 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-grades-message p {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Botón de Guardar Datos */
+        .save-data-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
+            display: inline-block;
+            visibility: visible;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        .save-data-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .save-data-btn:hover::before {
+            left: 100%;
+        }
+
+        .save-data-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 15px 35px rgba(245, 158, 11, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .save-data-btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .save-data-btn i {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .save-status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 500;
+            text-align: center;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .save-status.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .save-status.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Estilos para Login Corporativo Empresarial */
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.02) 50%, transparent 70%),
+                linear-gradient(-45deg, transparent 30%, rgba(255, 255, 255, 0.01) 50%, transparent 70%);
+            animation: shimmer 8s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.08);
+            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(30px);
+            padding: 3.5rem;
+            border-radius: 24px;
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 480px;
+            text-align: center;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            overflow: hidden;
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        }
+
+        .login-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.05) 100%);
+            pointer-events: none;
+        }
+
+        .login-header {
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-header h1 {
+            color: #ffffff;
+            margin-bottom: 0.8rem;
+            font-size: 2.8rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e6ff 50%, #c7d2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .login-header p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .login-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+        }
+
+        .login-form {
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .login-form .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-form .form-group input,
+        .login-form .form-group select {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            font-size: 1rem;
+            transition: all 0.4s ease;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            box-sizing: border-box;
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .login-form .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 300;
+        }
+
+        .login-form .form-group input:focus,
+        .login-form .form-group select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 0 0 3px rgba(255, 255, 255, 0.1),
+                0 8px 32px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .login-form .form-group::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .login-form .form-group:focus-within::after {
+            opacity: 1;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 1.4rem;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            margin-top: 1rem;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-login:hover::before {
+            left: 100%;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+        }
+
+        .btn-login:active {
+            transform: translateY(-1px);
+        }
+
+        .login-message {
+            margin-top: 2rem;
+            padding: 1.2rem;
+            border-radius: 16px;
+            font-weight: 400;
+            text-align: center;
+            font-size: 0.9rem;
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .login-message.success {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.1));
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .login-message.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+            color: #f87171;
+            border-color: rgba(248, 113, 113, 0.3);
+        }
+
+        /* Animaciones corporativas */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.2); }
+        }
+
+        .login-box {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .btn-login:focus {
+            animation: pulse 0.8s ease-in-out;
+        }
+
+        .login-box:hover {
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        /* Efectos de carga */
+        .btn-login.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn-login.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .login-header h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .user-info span {
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Estilos para Recordar Usuario */
+        .remember-user {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .remember-user:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .remember-user input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            position: relative;
+            appearance: none;
+            transition: all 0.3s ease;
+        }
+
+        .remember-user input[type="checkbox"]:checked {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            border-color: #8b5cf6;
+        }
+
+        .remember-user input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .remember-user label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .remember-user:hover label {
+            color: white;
+        }
+
+        /* Estilos para Evaluación por Competencias */
+        .competencies-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .competency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .competency-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .competency-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6, #06b6d4);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .competency-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .competency-item label {
+            display: block;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .competency-item input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .competency-item input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .competency-percentage {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .final-grade-display {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            margin-top: 1rem;
+        }
+
+        .final-grade-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .final-grade-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #10b981;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Estilos adicionales para dashboard profesional */
+        .card h3 {
+            position: relative;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .card h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6, #06b6d4);
+            border-radius: 2px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .card-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .card-footer .btn {
+            margin: 0 0.5rem;
+        }
+
+        /* Animaciones para las estadísticas */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-number {
+            animation: countUp 0.6s ease-out;
+        }
+
+        /* Efectos de hover mejorados para las tarjetas */
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        /* Mejoras en los formularios */
+        .form-group {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-group input:focus + label,
+        .form-group select:focus + label {
+            color: #8b5cf6;
+        }
+
+        /* Mejoras en los botones */
+        .btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Sistema de Acordeón para Dashboard */
+        .card {
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-header {
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            padding: 2rem 2.5rem;
+            margin: -2.5rem -2.5rem 0 -2.5rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card-header:hover {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+        }
+
+        .card-header h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: -0.3px;
+        }
+
+        .card-header h3::after {
+            content: '';
+            position: static;
+            width: 0;
+            height: 0;
+            background: none;
+        }
+
+        .card-toggle-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .card.collapsed .card-toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .card-content {
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .card.collapsed .card-content {
+            max-height: 0;
+            padding: 0 2.5rem;
+            opacity: 0;
+        }
+
+        .card.expanded .card-content {
+            max-height: 2000px;
+            opacity: 1;
+        }
+
+        /* Animación de entrada para el contenido */
+        .card-content > * {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+
+        .card.collapsed .card-content > * {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+
+        .card.expanded .card-content > * {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Estilos para el estado inicial */
+        .card:not(.expanded):not(.collapsed) .card-content {
+            max-height: 2000px;
+            opacity: 1;
+        }
+
+        .card:not(.expanded):not(.collapsed) .card-toggle-icon {
+            transform: rotate(0deg);
+        }
+
+        /* Estilos profesionales para formularios */
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: #ffffff;
+            color: #1f2937;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Estilos profesionales para botones */
+        .btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: none;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            box-shadow: 0 8px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            box-shadow: 0 4px 6px rgba(6, 182, 212, 0.2);
+        }
+
+        .btn-info:hover {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            box-shadow: 0 8px 15px rgba(6, 182, 212, 0.3);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Pantalla de Login Corporativo Empresarial -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>EDUTRACK PRO</h1>
+                <p>Plataforma de Gestión Académica Empresarial</p>
+                </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" required placeholder="Ingresa tu nombre de usuario">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" required placeholder="Ingresa tu contraseña">
+            </div>
+                <div class="remember-user">
+                    <input type="checkbox" id="rememberUser">
+                    <label for="rememberUser">Recordar usuario y contraseña</label>
+            </div>
+                <button type="submit" class="btn btn-login">
+                    <span>Acceder al Sistema</span>
+                    </button>
+            </form>
+            <div id="loginMessage" class="login-message"></div>
+                </div>
+            </div>
+
+    <!-- Contenido Principal (oculto inicialmente) -->
+    <div id="mainContent" class="container" style="display: none;">
         <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <i class="fas fa-graduation-cap"></i>
-                <h1>Sistema de Notas Escolares</h1>
-            </div>
-            <nav class="nav">
-                <button class="nav-btn active" data-section="login">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Iniciar Sesión
-                </button>
-                <button class="nav-btn" data-section="parent-query">
-                    <i class="fas fa-search"></i>
-                    Consultar Notas
-                </button>
-            </nav>
-        </header>
+        <div class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>EDUTRACK PRO</h1>
+                    <p>Plataforma de Gestión Académica Empresarial</p>
+                </div>
+                <div class="user-info">
+                    <span id="currentUser"></span>
+                    <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
+                        </div>
+                        </div>
+                </div>
 
-        <!-- Login Section (Profesores) -->
-        <section id="login" class="section active">
-            <div class="card">
-                <div class="card-header">
-                    <h2><i class="fas fa-user-tie"></i> Acceso Profesores</h2>
-                </div>
-                <form id="loginForm" class="form">
-                    <div class="form-group">
-                        <label for="teacherEmail">Usuario:</label>
-                        <input type="text" id="teacherEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="teacherPassword">Contraseña:</label>
-                        <input type="password" id="teacherPassword" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Iniciar Sesión
-                    </button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Parent Query Section -->
-        <section id="parent-query" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <h2><i class="fas fa-search"></i> Consulta de Notas</h2>
-                    <p>Ingrese la cédula del padre/madre para consultar las notas</p>
-                </div>
-                <form id="parentQueryForm" class="form">
-                    <div class="form-group">
-                        <label for="parentCedula">Cédula de Identidad:</label>
-                        <input type="text" id="parentCedula" placeholder="Ej: 12345678" required>
-                    </div>
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-search"></i>
-                        Consultar Notas
-                    </button>
-                </form>
-            </div>
-            
-            <!-- Results will be displayed here -->
-            <div id="queryResults" class="results-container" style="display: none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-user-graduate"></i> Información del Estudiante</h3>
-                    </div>
-                    <div id="studentInfo" class="student-info"></div>
-                </div>
+        <!-- Dashboard -->
+        <div class="dashboard">
+            <!-- Header del Dashboard -->
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">Panel de Control Académico</h2>
+                <p class="dashboard-subtitle">Gestión Integral de Estudiantes y Evaluaciones</p>
                 
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-chart-bar"></i> Calificaciones por Materia</h3>
-                    </div>
-                    <div id="gradesTable" class="grades-table"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Teacher Dashboard (hidden initially) -->
-        <section id="teacher-dashboard" class="dashboard section">
-            <div class="dashboard-container">
-                <!-- Dashboard Header -->
-                <div class="dashboard-header">
-                    <h1><i class="fas fa-chalkboard-teacher"></i> Panel del Profesor</h1>
-                    <p>Gestiona estudiantes y calificaciones de manera eficiente</p>
-                    <div class="user-info" style="margin-top: 20px;">
-                        <span id="teacherName" style="background: rgba(102, 126, 234, 0.1); padding: 8px 16px; border-radius: 20px; color: #667eea; font-weight: 600;">Profesor</span>
-                        <button id="logoutBtn" class="action-btn danger" style="margin-left: 15px;">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Cerrar Sesión
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Stats Cards -->
-                <div class="stats-grid">
+                <!-- Estadísticas del Dashboard -->
+            <div class="dashboard-stats">
                     <div class="stat-card">
+                        <span class="stat-icon">👥</span>
                         <div class="stat-number" id="totalStudents">0</div>
-                        <div class="stat-label"><i class="fas fa-users"></i> Total Estudiantes</div>
-                    </div>
+                        <div class="stat-label">Estudiantes</div>
+                        </div>
                     <div class="stat-card">
+                        <span class="stat-icon">📊</span>
                         <div class="stat-number" id="totalGrades">0</div>
-                        <div class="stat-label"><i class="fas fa-graduation-cap"></i> Calificaciones</div>
+                        <div class="stat-label">Evaluaciones</div>
+                        </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">📚</span>
+                        <div class="stat-number" id="totalSubjects">5</div>
+                        <div class="stat-label">Materias</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label"><i class="fas fa-chart-line"></i> Eficiencia</div>
+                        <span class="stat-icon">⭐</span>
+                        <div class="stat-number" id="averageGrade">0.0</div>
+                        <div class="stat-label">Promedio General</div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Navigation -->
-                <div class="nav-buttons">
-                    <button class="nav-btn active" data-section="add-student">
-                        <i class="fas fa-user-plus"></i>
-                        Registrar Estudiante
-                    </button>
-                    <button class="nav-btn" data-section="add-grades">
-                        <i class="fas fa-edit"></i>
-                        Registrar Notas
-                    </button>
-                    <button class="nav-btn" data-section="students-list">
-                        <i class="fas fa-list"></i>
-                        Lista de Estudiantes
-                    </button>
-                    <button class="nav-btn" data-section="import-excel">
-                        <i class="fas fa-file-excel"></i>
-                        Importar Excel
-                    </button>
-                    <button class="nav-btn" onclick="debugGrades()" style="background: #ffc107; color: #000;">
-                        <i class="fas fa-bug"></i>
-                        Debug Notas
-                    </button>
-                    <button id="deleteAllGradesBtn" class="nav-btn" style="background: #dc3545; color: white;">
-                        <i class="fas fa-trash-alt"></i>
-                        Eliminar Calificaciones
-                    </button>
+            <!-- Registro de Estudiantes -->
+            <div class="card collapsed" data-card="students">
+                <div class="card-header">
+                    <h3>
+                        👤 Gestión de Estudiantes
+                        <span class="card-toggle-icon">▼</span>
+                    </h3>
                 </div>
-
-                <!-- Dashboard Grid -->
-                <div class="dashboard-grid">
-                    <!-- Import Excel Data -->
-                    <div id="import-excel" class="dashboard-card section">
-                        <div class="card-header">
-                            <h3><i class="fas fa-file-excel"></i> Importar Datos desde Excel</h3>
-                        </div>
-                        <p>Sube un archivo Excel con los datos de los estudiantes</p>
-                        <form id="importExcelForm" class="form">
-                            <div class="form-group">
-                                <label for="excelFile">Archivo Excel (.xlsx, .xls):</label>
-                                <input type="file" id="excelFile" accept=".xlsx,.xls" required>
-                                <small>El archivo debe tener columnas: Nombre, ID, Cédula, Grado</small>
-                            </div>
-                            <button type="submit" class="action-btn success">
-                                <i class="fas fa-upload"></i>
-                                Importar Estudiantes
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Add Student Form -->
-                    <div id="add-student" class="dashboard-card section active">
-                        <div class="card-header">
-                            <h3><i class="fas fa-user-plus"></i> Registrar Estudiante Individual</h3>
-                        </div>
-                        <p>Agrega un nuevo estudiante al sistema</p>
-                <form id="addStudentForm" class="form">
-                    <div class="form-row">
+                <div class="card-content">
+                    <form id="studentForm">
                         <div class="form-group">
-                            <label for="studentName">📝 Nombre Completo:</label>
-                            <input type="text" id="studentName" placeholder="Ej: Juan Pérez García" required>
+                            <label for="studentName">Nombre Completo:</label>
+                            <input type="text" id="studentName" required>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="form-group">
-                            <label for="studentId">🆔 Cédula del Estudiante:</label>
-                            <input type="text" id="studentId" placeholder="Ej: 1234567890" required>
+                            <label for="studentId">Documento de Identidad:</label>
+                            <input type="text" id="studentId" required>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="form-group">
-                            <label for="grade">🎓 Grado:</label>
-                            <select id="grade" required>
-                                <option value="">Seleccionar grado</option>
-                                <option value="1°">1° Primero</option>
-                                <option value="2°">2° Segundo</option>
-                                <option value="3°">3° Tercero</option>
-                                <option value="4°">4° Cuarto</option>
-                                <option value="5°">5° Quinto</option>
-                                <option value="6°">6° Sexto</option>
-                                <option value="7°">7° Séptimo</option>
-                                <option value="8°">8° Octavo</option>
-                                <option value="9°">9° Noveno</option>
-                                <option value="10°">10° Décimo</option>
-                                <option value="11°">11° Once</option>
+                            <label for="studentGrade">Grado:</label>
+                            <select id="studentGrade" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="6">6°</option>
+                                <option value="7">7°</option>
+                                <option value="8">8°</option>
+                                <option value="9">9°</option>
+                                <option value="10">10°</option>
+                                <option value="11">11°</option>
                             </select>
                         </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-large">
-                        <i class="fas fa-plus"></i>
-                        ✅ Registrar Estudiante
-                    </button>
-                </form>
+                        <button type="submit" class="btn">Registrar Estudiante</button>
+                    </form>
+                </div>
             </div>
 
-                    <!-- Add Grades Form -->
-                    <div id="add-grades" class="dashboard-card section">
-                        <div class="card-header">
-                            <h3><i class="fas fa-graduation-cap"></i> Sistema de Evaluación Académica</h3>
-                            <p class="form-description">Registre las calificaciones de sus estudiantes siguiendo el sistema de evaluación institucional</p>
-                        </div>
+            <!-- Registro de Notas -->
+            <div class="card collapsed" data-card="grades">
+                <div class="card-header">
+                    <h3>
+                        📊 Sistema de Evaluación por Competencias
+                        <span class="card-toggle-icon">▼</span>
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <form id="gradeForm">
+                    <div class="form-group">
+                        <label for="gradeStudentId">Documento del Estudiante:</label>
+                        <input type="text" id="gradeStudentId" required placeholder="Ingresa el documento del estudiante">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Materia:</label>
+                        <select id="subject" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="matematicas">Matemáticas</option>
+                            <option value="espanol">Español</option>
+                            <option value="ciencias">Ciencias</option>
+                            <option value="sociales">Sociales</option>
+                            <option value="ingles">Inglés</option>
+                        </select>
+            </div>
+
+                    <!-- Sección de Evaluación por Competencias -->
+                    <div class="competencies-section">
+                        <h4 style="color: rgba(255, 255, 255, 0.9); margin-bottom: 1.5rem; font-size: 1.1rem; text-align: center;">
+                            📊 Evaluación por Competencias
+                        </h4>
                         
-                        <form id="addGradeForm" class="professional-form">
-                            <!-- Sección 1: Información del Estudiante -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h4><i class="fas fa-user-graduate"></i> Información del Estudiante</h4>
-                                </div>
-                                <div class="form-grid-2">
-                                    <div class="form-group">
-                                        <label for="studentDocumentInput">
-                                            <i class="fas fa-id-card"></i>
-                                            Documento de Identidad
-                                        </label>
-                                        <input type="text" id="studentDocumentInput" placeholder="Ingrese el número de documento" required>
-                                        <small class="form-help">Ejemplo: 1117265419</small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="studentNameDisplay">
-                                            <i class="fas fa-user"></i>
-                                            Nombre del Estudiante
-                                        </label>
-                                        <input type="text" id="studentNameDisplay" placeholder="Se completará automáticamente" readonly class="readonly-field">
-                                    </div>
-                                </div>
+                        <div class="competency-grid">
+                            <div class="competency-item">
+                                <label for="saberGrade">🧠 Saber (40%)</label>
+                                <input type="number" id="saberGrade" min="1" max="5" step="0.1" required placeholder="1.0 - 5.0">
+                                <div class="competency-percentage">40%</div>
+                </div>
+                
+                            <div class="competency-item">
+                                <label for="hacerGrade">⚡ Hacer (40%)</label>
+                                <input type="number" id="hacerGrade" min="1" max="5" step="0.1" required placeholder="1.0 - 5.0">
+                                <div class="competency-percentage">40%</div>
+                        </div>
+                            
+                            <div class="competency-item">
+                                <label for="serGrade">❤️ Ser (20%)</label>
+                                <input type="number" id="serGrade" min="1" max="5" step="0.1" required placeholder="1.0 - 5.0">
+                                <div class="competency-percentage">20%</div>
                             </div>
-
-                            <!-- Sección 2: Materia y Período -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h4><i class="fas fa-book"></i> Información Académica</h4>
-                                </div>
-                                <div class="form-grid-2">
-                                    <div class="form-group">
-                                        <label for="subject">
-                                            <i class="fas fa-chalkboard"></i>
-                                            Materia
-                                        </label>
-                                        <select id="subject" required>
-                                            <option value="">Seleccione una materia</option>
-                                            <option value="matematicas">Matemáticas</option>
-                                            <option value="espanol">Español</option>
-                                            <option value="ciencias">Ciencias Naturales</option>
-                                            <option value="sociales">Ciencias Sociales</option>
-                                            <option value="ingles">Inglés</option>
-                                            <option value="educacion_fisica">Educación Física</option>
-                                            <option value="arte">Arte</option>
-                                            <option value="religion">Religión</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="period">
-                                            <i class="fas fa-calendar-alt"></i>
-                                            Período Académico
-                                        </label>
-                                        <select id="period" required>
-                                            <option value="">Seleccione el período</option>
-                                            <option value="1">Primer Período</option>
-                                            <option value="2">Segundo Período</option>
-                                            <option value="3">Tercer Período</option>
-                                            <option value="4">Cuarto Período</option>
-                                        </select>
-                                        <small class="form-help period-sync-info">
-                                            <i class="fas fa-sync-alt"></i>
-                                            Se aplicará automáticamente a todas las notas
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Sección 3: Sistema de Evaluación -->
-                            <div class="form-section">
-                                        <div class="section-header">
-                                            <h4><i class="fas fa-chart-line"></i> Sistema de Evaluación Institucional</h4>
-                                            <p class="evaluation-info">Haga clic en una categoría para registrar las notas correspondientes</p>
-                                            <div class="evaluation-explanation">
-                                                <i class="fas fa-info-circle"></i>
-                                                <span>Los porcentajes de cada categoría se distribuyen automáticamente entre las notas para sumar 100% de esa categoría</span>
-                                            </div>
-                                        </div>
-                                
-                                <!-- Componentes del Sistema de Evaluación -->
-                                <div class="evaluation-components">
-                                    <div class="component saber-component clickable-component" data-category="saber" onclick="selectEvaluationCategory('saber')">
-                                        <div class="component-header">
-                                            <div class="component-icon">🧠</div>
-                                            <div class="component-info">
-                                                <h5>Saber</h5>
-                                                <p>Conocimientos</p>
-                                            </div>
-                                            <div class="component-percentage">40%</div>
-                                        </div>
-                                        <div class="component-bar">
-                                            <div class="progress-fill saber-fill"></div>
-                                        </div>
-                                        <div class="component-action">
-                                            <i class="fas fa-mouse-pointer"></i>
-                                            <span>Hacer clic para registrar notas</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="component hacer-component clickable-component" data-category="hacer" onclick="selectEvaluationCategory('hacer')">
-                                        <div class="component-header">
-                                            <div class="component-icon">🛠️</div>
-                                            <div class="component-info">
-                                                <h5>Hacer</h5>
-                                                <p>Competencias</p>
-                                            </div>
-                                            <div class="component-percentage">40%</div>
-                                        </div>
-                                        <div class="component-bar">
-                                            <div class="progress-fill hacer-fill"></div>
-                                        </div>
-                                        <div class="component-action">
-                                            <i class="fas fa-mouse-pointer"></i>
-                                            <span>Hacer clic para registrar notas</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="component ser-component clickable-component" data-category="ser" onclick="selectEvaluationCategory('ser')">
-                                        <div class="component-header">
-                                            <div class="component-icon">👤</div>
-                                            <div class="component-info">
-                                                <h5>Ser</h5>
-                                                <p>Actitudes</p>
-                                            </div>
-                                            <div class="component-percentage">20%</div>
-                                        </div>
-                                        <div class="component-bar">
-                                            <div class="progress-fill ser-fill"></div>
-                                        </div>
-                                        <div class="component-action">
-                                            <i class="fas fa-mouse-pointer"></i>
-                                            <span>Hacer clic para registrar notas</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Selección de Categoría -->
-                                <div class="evaluation-selection">
-                                    <div class="form-group">
-                                        <label for="evaluationCategory">
-                                            <i class="fas fa-tasks"></i>
-                                            Categoría de Evaluación
-                                        </label>
-                                        <select id="evaluationCategory" required>
-                                            <option value="">Seleccione una categoría</option>
-                                            <option value="saber">
-                                                🧠 Saber - Conocimientos (40%)
-                                            </option>
-                                            <option value="hacer">
-                                                🛠️ Hacer - Competencias (40%)
-                                            </option>
-                                            <option value="ser">
-                                                👤 Ser - Actitudes (20%)
-                                            </option>
-                                        </select>
-                                    </div>
-                                    
-                                    <!-- Contenedor para notas dinámicas -->
-                                    <div id="notesContainer" class="notes-container" style="display: none;">
-                                        <div class="notes-header">
-                                            <h5><i class="fas fa-edit"></i> Registro de Notas</h5>
-                                            <div class="notes-header-right">
-                                                <div id="totalPercentage" class="total-percentage">
-                                                    <span class="percentage-label">Total de la categoría:</span>
-                                                    <span class="percentage-value">0.0%</span>
-                                                </div>
-                                                <button type="button" id="addNoteBtn" class="btn-add-note">
-                                                    <i class="fas fa-plus"></i>
-                                                    Agregar Nota
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div id="notesList" class="notes-list">
-                                            <!-- Las notas se generarán dinámicamente aquí -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                                <!-- Sección 4: Cálculo Automático -->
-                                <div class="form-section">
-                                    <div class="section-header">
-                                        <h4><i class="fas fa-calculator"></i> Cálculo Automático</h4>
-                                        <p class="calculation-info">El sistema calculará automáticamente la nota final basada en los porcentajes</p>
-                                    </div>
-                                    
-                                    <!-- Resultado del cálculo -->
-                                    <div id="calculationResult" class="calculation-result" style="display: none;">
-                                        <div class="calculation-header">
-                                            <h5><i class="fas fa-chart-bar"></i> Resultado del Cálculo</h5>
-                                            <button type="button" id="recalculateBtn" class="btn-recalculate">
-                                                <i class="fas fa-sync-alt"></i>
-                                                Recalcular
-                                            </button>
-                                        </div>
-                                        <div class="calculation-details">
-                                            <div class="category-calculation">
-                                                <div class="category-header">
-                                                    <span class="category-name">🧠 Saber (40%)</span>
-                                                    <span class="category-result" id="saberResult">-</span>
-                                                </div>
-                                                <div class="category-breakdown" id="saberBreakdown"></div>
-                                            </div>
-                                            <div class="category-calculation">
-                                                <div class="category-header">
-                                                    <span class="category-name">🛠️ Hacer (40%)</span>
-                                                    <span class="category-result" id="hacerResult">-</span>
-                                                </div>
-                                                <div class="category-breakdown" id="hacerBreakdown"></div>
-                                            </div>
-                                            <div class="category-calculation">
-                                                <div class="category-header">
-                                                    <span class="category-name">👤 Ser (20%)</span>
-                                                    <span class="category-result" id="serResult">-</span>
-                                                </div>
-                                                <div class="category-breakdown" id="serBreakdown"></div>
-                                            </div>
-                                        </div>
-                                        <div class="final-grade">
-                                            <div class="final-grade-header">
-                                                <span class="final-label">Nota Final:</span>
-                                                <span class="final-value" id="finalGradeValue">0.0</span>
-                                            </div>
-                                            <div class="final-grade-bar">
-                                                <div class="final-grade-fill" id="finalGradeFill"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Botones de acción -->
-                                    <div class="calculation-actions">
-                                        <button type="button" id="calculateGradeBtn" class="btn-calculate">
-                                            <i class="fas fa-calculator"></i>
-                                            🎯 Calcular y Registrar Nota Final Completa
-                                        </button>
-                                        <button type="button" id="registerCompleteGradeBtn" class="btn-register-complete" style="display: none;">
-                                            <i class="fas fa-check-circle"></i>
-                                            🎯 Registrar Nota Final Completa
-                                        </button>
-                                        <button type="button" id="clearFormBtn" class="btn-clear">
-                                            <i class="fas fa-trash-alt"></i>
-                                            Limpiar Formulario
-                                        </button>
-                                        <button type="button" id="saveTempBtn" class="btn-save-temp">
-                                            <i class="fas fa-save"></i>
-                                            Guardar Temporal
-                                        </button>
-                                    </div>
-                                </div>
-
-                            <!-- Botón de envío -->
-                            <div class="form-actions">
-                                <button type="submit" class="btn-professional">
-                                    <i class="fas fa-save"></i>
-                                    <span>Registrar Calificación</span>
-                                    <div class="btn-shine"></div>
-                                </button>
-                            </div>
-                        </form>
                     </div>
 
-                    <!-- Students List -->
-                    <div id="students-list" class="dashboard-card section">
-                        <div class="card-header">
-                            <h3><i class="fas fa-users"></i> Lista de Estudiantes</h3>
+                        <div class="final-grade-display">
+                            <div class="final-grade-label">Nota Final Calculada:</div>
+                            <div class="final-grade-value" id="finalGradeValue">0.0</div>
                         </div>
-                        <div class="action-buttons">
-                            <button id="exportStudentsBtn" class="action-btn success">
-                                <i class="fas fa-download"></i>
-                                Exportar Lista
-                            </button>
-                            <button id="deleteAllStudentsBtn" class="action-btn danger">
-                                <i class="fas fa-trash-alt"></i>
-                                Eliminar Todos
-                            </button>
-                            <button id="deleteAllGradesBtn" class="action-btn warning">
-                                <i class="fas fa-graduation-cap"></i>
-                                Eliminar Calificaciones
-                            </button>
-                        </div>
-                        <div id="studentsList" class="students-list"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Registrar Nota</button>
+                </form>
+                </div>
+            </div>
+
+            <!-- Lista de Estudiantes -->
+            <div class="card collapsed" data-card="students-list">
+                <div class="card-header">
+                    <h3>
+                        📋 Directorio de Estudiantes
+                        <span class="card-toggle-icon">▼</span>
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button id="loadStudents" class="btn btn-info">Ver Lista</button>
+                        <button id="reloadData" class="btn btn-success">Recargar Datos</button>
+                        <button id="saveData" class="save-data-btn">
+                            <i>💾</i> Guardar Datos
+                        </button>
+                    </div>
+                    <div id="saveStatus" class="save-status hidden"></div>
+                    <div id="studentsList" class="students-list">
+                        <p>Haz clic en "Ver Lista" para ver los estudiantes</p>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
 
-    <!-- Loading Spinner -->
-    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
-        <div class="spinner"></div>
-        <p>Procesando...</p>
-    </div>
-
-    <!-- Toast Notifications -->
-    <div id="toastContainer" class="toast-container"></div>
-
-    <!-- Modal de confirmación de registro -->
-    <div id="registrationModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-icon">
-                    <i class="fas fa-check-circle"></i>
+            <!-- Consulta de Notas -->
+            <div class="card collapsed" data-card="query">
+                <div class="card-header">
+                    <h3>
+                        🔍 Centro de Consultas Académicas
+                        <span class="card-toggle-icon">▼</span>
+                    </h3>
                 </div>
-                <h3 class="modal-title">¡Nota Registrada Exitosamente!</h3>
-            </div>
-            <div class="modal-body">
-                <p class="modal-message" id="modalMessage">La nota ha sido registrada correctamente.</p>
-                <div class="modal-details" id="modalDetails">
-                    <!-- Los detalles se llenarán dinámicamente -->
+                <div class="card-content">
+                    <form id="queryForm">
+                        <div class="form-group">
+                            <label for="queryStudentId">Documento del Estudiante:</label>
+                            <input type="text" id="queryStudentId" required placeholder="Ingresa el documento del estudiante">
+                        </div>
+                        <button type="submit" class="btn btn-info">Consultar Notas</button>
+                    </form>
+                    <div id="queryResults" class="query-results-container hidden">
+                        <div id="studentInfo"></div>
+                        <div id="gradesInfo"></div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="modal-btn modal-btn-primary" onclick="closeRegistrationModal()">
-                    <i class="fas fa-check"></i>
-                    Entendido
-                </button>
-                <button type="button" class="modal-btn modal-btn-secondary" onclick="closeRegistrationModal()">
-                    <i class="fas fa-times"></i>
-                    Cerrar
-                </button>
-            </div>
-        </div>
-    </div>
 
-    <script src="script.js"></script>
+            <!-- Todas las Notas -->
+            <div class="card collapsed" data-card="all-grades">
+                <div class="card-header">
+                    <h3>
+                        📈 Análisis de Rendimiento Académico
+                        <span class="card-toggle-icon">▼</span>
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button id="loadAllGrades" class="btn btn-info">Ver Todas las Notas</button>
+                        <button id="filterBySubject" class="btn btn-success">Filtrar por Materia</button>
+                        <button id="saveData2" class="save-data-btn">
+                            <i>💾</i> Guardar Datos
+                        </button>
+                    </div>
+                <div class="form-group" id="subjectFilter" style="display: none;">
+                    <label for="gradeSubjectFilter">Materia:</label>
+                    <select id="gradeSubjectFilter">
+                        <option value="">Todas las materias</option>
+                                <option value="matematicas">Matemáticas</option>
+                                <option value="espanol">Español</option>
+                        <option value="ciencias">Ciencias</option>
+                        <option value="sociales">Sociales</option>
+                                <option value="ingles">Inglés</option>
+                            </select>
+                        </div>
+                    <div id="allGradesList" class="students-list">
+                        <p>Haz clic en "Ver Todas las Notas" para ver el registro completo</p>
+                    </div>
+                </div>
+            </div>
+                        
+        <!-- Área de mensajes -->
+        <div id="messages"></div>
+                        </div>
+
+    <script>
+        // Variables globales
+        let students = [];
+        let grades = [];
+        let teachers = [];
+        let currentUser = null;
+        let isLoggedIn = false;
+
+        // Función para cargar profesores desde CSV
+        async function loadTeachersFromCSV() {
+            try {
+                const teachersResponse = await fetch('teachers.csv');
+                if (teachersResponse.ok) {
+                    const teachersText = await teachersResponse.text();
+                    const teachersLines = teachersText.split('\n').filter(line => line.trim());
+                    
+                    teachersLines.forEach((line, index) => {
+                        if (index === 0) return; // Saltar encabezado
+                        const columns = line.split(',');
+                        if (columns.length >= 4) {
+                            teachers.push({
+                                id: columns[0].trim(),
+                                username: columns[1].trim(),
+                                password: columns[2].trim(),
+                                name: columns[3].trim(),
+                                type: columns[1].trim() === 'admin' ? 'admin' : 'teacher'
+                            });
+                        }
+                    });
+                }
+                console.log(`Profesores cargados: ${teachers.length}`);
+            } catch (error) {
+                console.log('No se pudieron cargar los profesores desde CSV');
+            }
+        }
+
+        // Función para mostrar mensaje de login
+        function showLoginMessage(message, type = 'success') {
+            const messageDiv = document.getElementById('loginMessage');
+            messageDiv.innerHTML = `<div class="login-message ${type}">${message}</div>`;
+            
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // Función para validar login (detecta automáticamente el rol)
+        function validateLogin(username, password) {
+            const teacher = teachers.find(t => 
+                t.username === username && 
+                t.password === password
+            );
+            return teacher;
+        }
+
+        // Función para mostrar contenido principal
+        function showMainContent(user) {
+            currentUser = user;
+            isLoggedIn = true;
+            
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            
+            // Mostrar información del usuario
+            document.getElementById('currentUser').textContent = 
+                `Bienvenido, ${user.name} (${user.type === 'admin' ? 'Administrador' : 'Profesor'})`;
+            
+            // Actualizar interfaz según tipo de usuario
+            updateUIForUserType(user.type);
+            
+            // Intentar cargar datos guardados primero, luego CSV
+            if (!loadDataFromLocalStorage()) {
+                loadDataFromCSV();
+            }
+            
+            // Actualizar estadísticas del dashboard
+            updateDashboardStats();
+        }
+
+        // Función para actualizar las estadísticas del dashboard
+        function updateDashboardStats() {
+            // Total de estudiantes
+            document.getElementById('totalStudents').textContent = students.length;
+            
+            // Total de evaluaciones
+            document.getElementById('totalGrades').textContent = grades.length;
+            
+            // Promedio general
+            if (grades.length > 0) {
+                const totalGrade = grades.reduce((sum, grade) => sum + grade.grade, 0);
+                const averageGrade = totalGrade / grades.length;
+                document.getElementById('averageGrade').textContent = averageGrade.toFixed(1);
+                
+                // Cambiar color según el promedio
+                const averageElement = document.getElementById('averageGrade');
+                if (averageGrade >= 4.0) {
+                    averageElement.style.color = '#10b981'; // Verde
+                } else if (averageGrade >= 3.0) {
+                    averageElement.style.color = '#f59e0b'; // Amarillo
+                } else {
+                    averageElement.style.color = '#ef4444'; // Rojo
+                }
+            } else {
+                document.getElementById('averageGrade').textContent = '0.0';
+                document.getElementById('averageGrade').style.color = '#ffffff';
+            }
+        }
+
+        // Función para actualizar la interfaz según el tipo de usuario
+        function updateUIForUserType(userType) {
+            const studentForm = document.getElementById('studentForm');
+            const studentCard = studentForm.closest('.card');
+            
+            if (userType === 'teacher') {
+                // Los profesores solo pueden ver, no registrar estudiantes
+                studentCard.style.opacity = '0.6';
+                studentCard.style.pointerEvents = 'none';
+                studentCard.querySelector('h3').innerHTML = '👤 Registro de Estudiantes <small style="color: #666;">(Solo Administradores)</small>';
+            } else if (userType === 'admin') {
+                // Los administradores tienen acceso completo
+                studentCard.style.opacity = '1';
+                studentCard.style.pointerEvents = 'auto';
+                studentCard.querySelector('h3').innerHTML = '👤 Registro de Estudiantes';
+            }
+        }
+
+        // Función para cerrar sesión
+        function logout() {
+            currentUser = null;
+            isLoggedIn = false;
+            
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainContent').style.display = 'none';
+            
+            // Limpiar formulario de login
+            document.getElementById('loginForm').reset();
+            
+            // Limpiar datos
+            students = [];
+            grades = [];
+        }
+
+        // Event listeners para login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const rememberUser = document.getElementById('rememberUser').checked;
+            const loginBtn = document.querySelector('.btn-login');
+            
+            if (!username || !password) {
+                showLoginMessage('Por favor completa todos los campos', 'error');
+                return;
+            }
+            
+            // Mostrar estado de carga
+            loginBtn.classList.add('loading');
+            loginBtn.querySelector('span').textContent = 'Verificando...';
+            
+            // Simular delay de autenticación
+            setTimeout(() => {
+                const user = validateLogin(username, password);
+                
+                if (user) {
+                    const roleText = user.type === 'admin' ? 'Administrador' : 'Profesor';
+                    showLoginMessage(`¡Bienvenido, ${user.name}! Acceso como ${roleText} concedido.`, 'success');
+                    loginBtn.querySelector('span').textContent = 'Accediendo...';
+                    
+                    // Guardar credenciales si está marcado recordar
+                    if (rememberUser) {
+                        saveCredentials(username, password);
+                    } else {
+                        clearCredentials();
+                    }
+                    
+                    setTimeout(() => {
+                        showMainContent(user);
+                    }, 1000);
+                } else {
+                    showLoginMessage('Credenciales incorrectas. Verifica tu usuario y contraseña.', 'error');
+                    loginBtn.classList.remove('loading');
+                    loginBtn.querySelector('span').textContent = 'Acceder al Sistema';
+                }
+            }, 1500);
+        });
+
+        // Event listener para cerrar sesión
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            logout();
+        });
+
+        // Funciones para manejar credenciales guardadas
+        function saveCredentials(username, password) {
+            try {
+                const credentials = {
+                    username: username,
+                    password: password,
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem('edutrack_credentials', JSON.stringify(credentials));
+                console.log('Credenciales guardadas exitosamente');
+            } catch (error) {
+                console.error('Error al guardar credenciales:', error);
+            }
+        }
+
+        function loadCredentials() {
+            try {
+                const savedCredentials = localStorage.getItem('edutrack_credentials');
+                if (savedCredentials) {
+                    const credentials = JSON.parse(savedCredentials);
+                    document.getElementById('username').value = credentials.username;
+                    document.getElementById('password').value = credentials.password;
+                    document.getElementById('rememberUser').checked = true;
+                    console.log('Credenciales cargadas exitosamente');
+                    return true;
+                }
+            } catch (error) {
+                console.error('Error al cargar credenciales:', error);
+            }
+            return false;
+        }
+
+        function clearCredentials() {
+            try {
+                localStorage.removeItem('edutrack_credentials');
+                console.log('Credenciales eliminadas');
+            } catch (error) {
+                console.error('Error al eliminar credenciales:', error);
+            }
+        }
+
+        // Cargar credenciales al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCredentials();
+            
+            // Event listeners para cálculo automático de nota final
+            document.getElementById('saberGrade').addEventListener('input', calculateFinalGrade);
+            document.getElementById('hacerGrade').addEventListener('input', calculateFinalGrade);
+            document.getElementById('serGrade').addEventListener('input', calculateFinalGrade);
+            
+            // Inicializar sistema de acordeón
+            initializeAccordion();
+        });
+
+        // Función para inicializar el sistema de acordeón
+        function initializeAccordion() {
+            const cards = document.querySelectorAll('.card[data-card]');
+            
+            cards.forEach(card => {
+                const header = card.querySelector('.card-header');
+                const content = card.querySelector('.card-content');
+                const icon = card.querySelector('.card-toggle-icon');
+                
+                // Agregar event listener al header
+                header.addEventListener('click', function() {
+                    toggleCard(card, icon, content);
+                });
+                
+                // Establecer estado inicial (colapsado)
+                card.classList.add('collapsed');
+                content.style.maxHeight = '0';
+                content.style.opacity = '0';
+                content.style.padding = '0 2.5rem';
+            });
+        }
+
+        // Función para alternar el estado de una tarjeta
+        function toggleCard(card, icon, content) {
+            const isCollapsed = card.classList.contains('collapsed');
+            
+            if (isCollapsed) {
+                // Expandir
+                card.classList.remove('collapsed');
+                card.classList.add('expanded');
+                icon.style.transform = 'rotate(0deg)';
+                content.style.maxHeight = '2000px';
+                content.style.opacity = '1';
+                content.style.padding = '2.5rem';
+            } else {
+                // Colapsar
+                card.classList.remove('expanded');
+                card.classList.add('collapsed');
+                icon.style.transform = 'rotate(-90deg)';
+                content.style.maxHeight = '0';
+                content.style.opacity = '0';
+                content.style.padding = '0 2.5rem';
+            }
+        }
+
+        // Función para calcular la nota final automáticamente
+        function calculateFinalGrade() {
+            const saberGrade = parseFloat(document.getElementById('saberGrade').value) || 0;
+            const hacerGrade = parseFloat(document.getElementById('hacerGrade').value) || 0;
+            const serGrade = parseFloat(document.getElementById('serGrade').value) || 0;
+            
+            const finalGrade = (saberGrade * 0.4) + (hacerGrade * 0.4) + (serGrade * 0.2);
+            document.getElementById('finalGradeValue').textContent = finalGrade.toFixed(1);
+            
+            // Cambiar color según la nota
+            const finalGradeElement = document.getElementById('finalGradeValue');
+            if (finalGrade >= 4.0) {
+                finalGradeElement.style.color = '#10b981'; // Verde
+            } else if (finalGrade >= 3.0) {
+                finalGradeElement.style.color = '#f59e0b'; // Amarillo
+            } else {
+                finalGradeElement.style.color = '#ef4444'; // Rojo
+            }
+        }
+
+        // Base de datos simple en memoria
+
+        // Función para cargar datos desde CSV
+        async function loadDataFromCSV() {
+            try {
+                // Cargar estudiantes
+                const studentsResponse = await fetch('students.csv');
+                if (studentsResponse.ok) {
+                    const studentsText = await studentsResponse.text();
+                    const studentsLines = studentsText.split('\n').filter(line => line.trim());
+                    
+                    studentsLines.forEach((line, index) => {
+                        if (index === 0) return; // Saltar encabezado
+                        const columns = line.split(',');
+                        if (columns.length >= 3) {
+                            const id = columns[1].trim(); // documento
+                            const name = columns[2].trim(); // nombre
+                            const grade = '11'; // Asumir grado 11 por defecto
+                            
+                            students.push({ 
+                                name: name, 
+                                id: id, 
+                                grade: grade 
+                            });
+                        }
+                    });
+                }
+
+                // Cargar notas
+                const gradesResponse = await fetch('grades.csv');
+                if (gradesResponse.ok) {
+                    const gradesText = await gradesResponse.text();
+                    const gradesLines = gradesText.split('\n').filter(line => line.trim());
+                    
+                    gradesLines.forEach((line, index) => {
+                        if (index === 0) return; // Saltar encabezado
+                        const columns = line.split(',');
+                        if (columns.length >= 6) {
+                            const studentId = columns[0].trim(); // documento
+                            const studentName = columns[1].trim(); // nombre
+                            const subject = columns[2].trim(); // materia
+                            const grade = parseFloat(columns[5].trim()); // nota
+                            const date = columns[8] ? columns[8].trim() : new Date().toLocaleDateString(); // fecha
+                            
+                            grades.push({
+                                studentId: studentId,
+                                studentName: studentName,
+                                subject: subject,
+                                grade: grade,
+                                date: date
+                            });
+                        }
+                    });
+                }
+
+                console.log(`Datos cargados: ${students.length} estudiantes, ${grades.length} notas`);
+                showMessage(`Sistema cargado con ${students.length} estudiantes y ${grades.length} notas`);
+            } catch (error) {
+                console.log('No se pudieron cargar los archivos CSV, iniciando con datos vacíos');
+                showMessage('Sistema cargado correctamente. ¡Bienvenido!');
+            }
+        }
+
+        // Función para mostrar mensajes
+        function showMessage(message, type = 'success') {
+            const messagesDiv = document.getElementById('messages');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            messagesDiv.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
+            
+            // Ocultar mensaje después de 3 segundos
+            setTimeout(() => {
+                messagesDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // Registrar estudiante
+        document.getElementById('studentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('studentName').value;
+            const id = document.getElementById('studentId').value;
+            const grade = document.getElementById('studentGrade').value;
+            
+            // Verificar si el estudiante ya existe
+            if (students.find(s => s.id === id)) {
+                showMessage('El estudiante ya existe', 'error');
+                return;
+            }
+            
+            // Verificar permisos de administrador
+            if (currentUser && currentUser.type !== 'admin') {
+                showMessage('Solo los administradores pueden registrar estudiantes', 'error');
+                return;
+            }
+            
+            // Agregar estudiante
+            students.push({ name, id, grade });
+            showMessage(`Estudiante ${name} registrado exitosamente`);
+            
+            // Actualizar estadísticas del dashboard
+            updateDashboardStats();
+            
+            // Limpiar formulario
+            this.reset();
+            
+            // Actualizar lista si está visible
+            if (!document.getElementById('studentsList').classList.contains('hidden')) {
+                loadStudentsList();
+            }
+        });
+
+        // Registrar nota
+        document.getElementById('gradeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('gradeStudentId').value;
+            const subject = document.getElementById('subject').value;
+            const saberGrade = parseFloat(document.getElementById('saberGrade').value);
+            const hacerGrade = parseFloat(document.getElementById('hacerGrade').value);
+            const serGrade = parseFloat(document.getElementById('serGrade').value);
+            
+            // Verificar si el estudiante existe
+            const student = students.find(s => s.id === studentId);
+            if (!student) {
+                showMessage('Estudiante no encontrado', 'error');
+                return;
+            }
+            
+            // Calcular nota final ponderada
+            const finalGrade = (saberGrade * 0.4) + (hacerGrade * 0.4) + (serGrade * 0.2);
+            
+            // Agregar nota con competencias
+            grades.push({
+                studentId,
+                studentName: student.name,
+                subject,
+                grade: finalGrade,
+                saberGrade: saberGrade,
+                hacerGrade: hacerGrade,
+                serGrade: serGrade,
+                date: new Date().toLocaleDateString()
+            });
+            
+            showMessage(`Nota ${finalGrade.toFixed(1)} registrada para ${student.name} en ${subject} (Saber: ${saberGrade}, Hacer: ${hacerGrade}, Ser: ${serGrade})`);
+            
+            // Actualizar estadísticas del dashboard
+            updateDashboardStats();
+            
+            // Limpiar formulario
+            this.reset();
+            document.getElementById('finalGradeValue').textContent = '0.0';
+        });
+
+        // Cargar lista de estudiantes
+        document.getElementById('loadStudents').addEventListener('click', function() {
+            loadStudentsList();
+        });
+
+        // Recargar datos desde CSV
+        document.getElementById('reloadData').addEventListener('click', function() {
+            students = [];
+            grades = [];
+            loadDataFromCSV();
+        });
+
+        // Event listener para guardar datos
+        document.getElementById('saveData').addEventListener('click', function() {
+            saveDataToLocalStorage();
+        });
+
+        // Event listener para el segundo botón de guardar datos
+        document.getElementById('saveData2').addEventListener('click', function() {
+            saveDataToLocalStorage();
+        });
+
+        // Función para guardar datos en localStorage
+        function saveDataToLocalStorage() {
+            try {
+                const dataToSave = {
+                    students: students,
+                    grades: grades,
+                    timestamp: new Date().toISOString(),
+                    version: '1.0'
+                };
+
+                localStorage.setItem('edutrack_data', JSON.stringify(dataToSave));
+                
+                const saveStatus = document.getElementById('saveStatus');
+                saveStatus.innerHTML = `
+                    <i>✅</i> Datos guardados exitosamente<br>
+                    <small>${students.length} estudiantes y ${grades.length} notas guardadas</small>
+                `;
+                saveStatus.className = 'save-status success';
+                saveStatus.classList.remove('hidden');
+                
+                // Ocultar mensaje después de 5 segundos
+                setTimeout(() => {
+                    saveStatus.classList.add('hidden');
+                }, 5000);
+                
+                console.log('Datos guardados en localStorage:', dataToSave);
+            } catch (error) {
+                console.error('Error al guardar datos:', error);
+                
+                const saveStatus = document.getElementById('saveStatus');
+                saveStatus.innerHTML = `
+                    <i>❌</i> Error al guardar los datos<br>
+                    <small>Verifica que el navegador soporte localStorage</small>
+                `;
+                saveStatus.className = 'save-status error';
+                saveStatus.classList.remove('hidden');
+                
+                // Ocultar mensaje después de 5 segundos
+                setTimeout(() => {
+                    saveStatus.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        // Función para cargar datos desde localStorage
+        function loadDataFromLocalStorage() {
+            try {
+                const savedData = localStorage.getItem('edutrack_data');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    
+                    if (data.students && data.grades) {
+                        students = data.students;
+                        grades = data.grades;
+                        
+                        console.log(`Datos cargados desde localStorage: ${students.length} estudiantes, ${grades.length} notas`);
+                        showMessage(`Datos restaurados: ${students.length} estudiantes y ${grades.length} notas`);
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.error('Error al cargar datos desde localStorage:', error);
+            }
+            return false;
+        }
+
+        function loadStudentsList() {
+            const listDiv = document.getElementById('studentsList');
+            
+            if (students.length === 0) {
+                listDiv.innerHTML = '<p>No hay estudiantes registrados. Haz clic en "Recargar Datos" para cargar desde CSV.</p>';
+                return;
+            }
+            
+            let html = `<p><strong>Total de estudiantes: ${students.length}</strong></p>`;
+            students.forEach(student => {
+                const studentGrades = grades.filter(g => g.studentId === student.id);
+                const avgGrade = studentGrades.length > 0 
+                    ? (studentGrades.reduce((sum, g) => sum + g.grade, 0) / studentGrades.length).toFixed(1)
+                    : 'Sin notas';
+                
+                html += `
+                    <div class="student-item">
+                        <div>
+                            <strong>${student.name}</strong><br>
+                            <small>ID: ${student.id} | Grado: ${student.grade}</small>
+                                </div>
+                        <div>
+                            <strong>Promedio: ${avgGrade}</strong><br>
+                            <small>Notas: ${studentGrades.length}</small>
+                            </div>
+                        </div>
+                `;
+            });
+            
+            listDiv.innerHTML = html;
+        }
+
+        // Consultar notas
+        document.getElementById('queryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('queryStudentId').value;
+            const student = students.find(s => s.id === studentId);
+            
+            if (!student) {
+                showMessage('Estudiante no encontrado', 'error');
+                return;
+            }
+            
+            const studentGrades = grades.filter(g => g.studentId === studentId);
+            const resultsDiv = document.getElementById('queryResults');
+            const studentInfoDiv = document.getElementById('studentInfo');
+            const gradesInfoDiv = document.getElementById('gradesInfo');
+            
+            // Crear avatar con iniciales
+            const initials = student.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            
+            // Mostrar información del estudiante con diseño profesional
+            studentInfoDiv.innerHTML = `
+                <div class="student-profile-card">
+                    <div class="student-profile-header">
+                        <div class="student-avatar">${initials}</div>
+                        <div class="student-info">
+                            <h4>${student.name}</h4>
+                            <p>Documento: ${student.id} • Grado: ${student.grade}</p>
+                                </div>
+                            </div>
+                    <div class="student-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${studentGrades.length}</div>
+                            <div class="stat-label">Notas</div>
+                                </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${studentGrades.length > 0 ? (studentGrades.reduce((sum, g) => sum + g.grade, 0) / studentGrades.length).toFixed(1) : '0.0'}</div>
+                            <div class="stat-label">Promedio</div>
+                            </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${new Set(studentGrades.map(g => g.subject)).size}</div>
+                            <div class="stat-label">Materias</div>
+                        </div>
+            </div>
+                </div>
+            `;
+            
+            // Mostrar notas con diseño profesional
+            if (studentGrades.length === 0) {
+                gradesInfoDiv.innerHTML = `
+                    <div class="no-grades-message">
+                        <i>📝</i>
+                        <h4>Sin Notas Registradas</h4>
+                        <p>Este estudiante aún no tiene notas registradas en el sistema.</p>
+                        </div>
+                `;
+            } else {
+                let gradesHtml = `
+                    <div class="grades-summary">
+                        <h5><i>📊</i> Historial Académico</h5>
+                        <div class="grades-grid">
+                `;
+                
+                studentGrades.forEach(grade => {
+                    const gradeColor = grade.grade >= 4.0 ? '#10b981' : grade.grade >= 3.0 ? '#f59e0b' : '#ef4444';
+                    const competenciesHtml = grade.saberGrade ? `
+                        <div style="margin-top: 0.5rem; font-size: 0.8rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.2rem;">
+                                <span style="color: rgba(255, 255, 255, 0.7);">🧠 Saber:</span>
+                                <span style="color: #8b5cf6; font-weight: 600;">${grade.saberGrade}</span>
+                        </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.2rem;">
+                                <span style="color: rgba(255, 255, 255, 0.7);">⚡ Hacer:</span>
+                                <span style="color: #3b82f6; font-weight: 600;">${grade.hacerGrade}</span>
+                </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: rgba(255, 255, 255, 0.7);">❤️ Ser:</span>
+                                <span style="color: #06b6d4; font-weight: 600;">${grade.serGrade}</span>
+            </div>
+                        </div>
+                    ` : '';
+                    
+                    gradesHtml += `
+                        <div class="grade-card">
+                            <div class="grade-subject">${grade.subject}</div>
+                            <div class="grade-score" style="color: ${gradeColor}">${grade.grade}</div>
+                            ${competenciesHtml}
+                            <div class="grade-date">${grade.date}</div>
+                </div>
+                    `;
+                });
+                
+                gradesHtml += `
+                    </div>
+                </div>
+                `;
+                
+                gradesInfoDiv.innerHTML = gradesHtml;
+            }
+            
+            resultsDiv.classList.remove('hidden');
+        });
+
+        // Cargar todas las notas
+        document.getElementById('loadAllGrades').addEventListener('click', function() {
+            loadAllGradesList();
+        });
+
+        // Filtrar por materia
+        document.getElementById('filterBySubject').addEventListener('click', function() {
+            const filterDiv = document.getElementById('subjectFilter');
+            if (filterDiv.style.display === 'none') {
+                filterDiv.style.display = 'block';
+            } else {
+                filterDiv.style.display = 'none';
+            }
+        });
+
+        // Aplicar filtro de materia
+        document.getElementById('gradeSubjectFilter').addEventListener('change', function() {
+            loadAllGradesList();
+        });
+
+        function loadAllGradesList() {
+            const listDiv = document.getElementById('allGradesList');
+            const selectedSubject = document.getElementById('gradeSubjectFilter').value;
+            
+            if (grades.length === 0) {
+                listDiv.innerHTML = '<p>No hay notas registradas. Registra algunas notas primero.</p>';
+                return;
+            }
+
+            // Filtrar notas por materia si se seleccionó una
+            let filteredGrades = grades;
+            if (selectedSubject) {
+                filteredGrades = grades.filter(grade => grade.subject.toLowerCase() === selectedSubject.toLowerCase());
+            }
+
+            if (filteredGrades.length === 0) {
+                listDiv.innerHTML = `<p>No hay notas para la materia "${selectedSubject}".</p>`;
+                return;
+            }
+
+            let html = `<p><strong>Total de notas: ${filteredGrades.length}</strong></p>`;
+            
+            // Agrupar por estudiante
+            const gradesByStudent = {};
+            filteredGrades.forEach(grade => {
+                if (!gradesByStudent[grade.studentId]) {
+                    gradesByStudent[grade.studentId] = [];
+                }
+                gradesByStudent[grade.studentId].push(grade);
+            });
+
+            // Mostrar notas agrupadas por estudiante
+            Object.keys(gradesByStudent).forEach(studentId => {
+                const studentGrades = gradesByStudent[studentId];
+                const student = students.find(s => s.id === studentId);
+                const studentName = student ? student.name : studentGrades[0].studentName;
+                
+                html += `
+                    <div style="margin-bottom: 1rem; padding: 1rem; background: white; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <h4 style="margin: 0 0 0.5rem 0; color: #333;">${studentName}</h4>
+                        <small style="color: #666;">ID: ${studentId}</small>
+                `;
+
+                studentGrades.forEach(grade => {
+                    const gradeClass = grade.grade >= 3.0 ? 'grade-value' : 'grade-value';
+                    const gradeColor = grade.grade >= 3.0 ? '#28a745' : '#dc3545';
+                    
+                    html += `
+                        <div class="grade-item">
+                            <div class="grade-info">
+                                <span class="subject-badge">${grade.subject}</span>
+                                <span class="grade-date">${grade.date}</span>
+                </div>
+                            <div class="grade-value" style="color: ${gradeColor};">${grade.grade}</div>
+                        </div>
+                    `;
+                });
+
+                // Calcular promedio del estudiante
+                const average = (studentGrades.reduce((sum, g) => sum + g.grade, 0) / studentGrades.length).toFixed(1);
+                html += `
+                    <div style="margin-top: 0.5rem; padding: 0.5rem; background: #e9ecef; border-radius: 4px; text-align: center;">
+                        <strong>Promedio: ${average}</strong>
+                    </div>
+                `;
+
+                html += `</div>`;
+            });
+
+            listDiv.innerHTML = html;
+        }
+
+        // Cargar datos al iniciar
+        loadTeachersFromCSV();
+    </script>
 </body>
 </html>

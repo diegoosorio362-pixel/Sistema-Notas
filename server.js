@@ -225,6 +225,46 @@ function loadStudentsFromCSV() {
 
 // Rutas API
 
+// POST /api/login - Autenticación de usuarios
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    console.log(`🔐 Intento de login: ${username}`);
+    console.log(`📊 Total de profesores cargados: ${teachers.length}`);
+    console.log(`👥 Profesores disponibles:`, teachers.map(t => ({ username: t.username, name: t.name })));
+    
+    // Buscar usuario en la lista de profesores
+    const user = teachers.find(t => 
+        (t.username === username || t.email === username) && t.password === password
+    );
+    
+    if (user) {
+        console.log(`✅ Login exitoso para: ${user.name || user.username}`);
+        
+        // Determinar tipo de usuario
+        let role = 'teacher';
+        if (user.username.toLowerCase().includes('admin') || user.email.toLowerCase().includes('admin')) {
+            role = 'admin';
+        }
+        
+        // Respuesta con información del usuario
+        const userData = {
+            id: user.id,
+            username: user.username,
+            name: user.name,
+            role: role,
+            fullName: user.name,
+            displayName: user.name
+        };
+        
+        console.log(`📤 Enviando datos de usuario:`, userData);
+        res.json(userData);
+    } else {
+        console.log(`❌ Login fallido para: ${username}`);
+        console.log(`🔍 Profesores disponibles para comparar:`, teachers.map(t => t.username));
+        res.status(401).json({ message: 'Credenciales inválidas' });
+    }
+});
+
 // GET /api/students - Obtener todos los estudiantes
 app.get('/api/students', (req, res) => {
     console.log(`📋 Consultando ${students.length} estudiantes`);
