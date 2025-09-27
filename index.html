@@ -1072,6 +1072,37 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
+        /* Estilos para botones de acciones */
+        .btn-small {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0 2px;
+        }
+
+        .btn-small:hover {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .btn-small.btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .btn-small.btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
         /* Estilos para Subir Notas */
         .student-info-card {
             background: rgba(59, 130, 246, 0.1);
@@ -2557,7 +2588,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Documento</th>
                                         <th>Nombre</th>
                                         <th>Grado</th>
                                         <th>Promedio</th>
@@ -3201,11 +3232,14 @@
                 
                 html += `
                     <tr>
-                        <td>${student.id}</td>
                         <td>${student.documento}</td>
                         <td>${student.nombre}</td>
                         <td>${grade}° Grado</td>
                         <td><span class="status-badge status-${status}">${statusText}</span></td>
+                        <td>
+                            <button class="btn-small" onclick="editStudent(${student.id})">Editar</button>
+                            <button class="btn-small btn-danger" onclick="deleteStudent(${student.id})">Eliminar</button>
+                        </td>
                     </tr>
                 `;
             });
@@ -3236,11 +3270,14 @@
                 
                 html += `
                     <tr>
-                        <td>${student.id}</td>
                         <td>${student.documento}</td>
                         <td>${student.nombre}</td>
                         <td>${grade}° Grado</td>
                         <td><span class="status-badge status-${status}">${statusText}</span></td>
+                        <td>
+                            <button class="btn-small" onclick="editStudent(${student.id})">Editar</button>
+                            <button class="btn-small btn-danger" onclick="deleteStudent(${student.id})">Eliminar</button>
+                        </td>
                     </tr>
                 `;
             });
@@ -4092,6 +4129,17 @@
         // Función para abrir secciones (alias de openSection)
         function openModal(sectionName) {
             openSection(sectionName);
+        }
+
+        // Funciones placeholder para botones de acciones
+        function editStudent(studentId) {
+            alert(`Función de editar estudiante ${studentId} - Próximamente disponible`);
+        }
+
+        function deleteStudent(studentId) {
+            if (confirm(`¿Estás seguro de que quieres eliminar al estudiante ${studentId}?`)) {
+                alert(`Función de eliminar estudiante ${studentId} - Próximamente disponible`);
+            }
         }
 
         // Cargar datos cuando se abre el dashboard
