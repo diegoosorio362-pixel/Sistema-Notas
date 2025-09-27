@@ -1,102 +1,155 @@
-# 🎓 Sistema de Notas - Versión Simplificada y Funcional
+# Sistema de Notas - Backend Integration
 
-## 🚀 ¡SISTEMA COMPLETAMENTE INTEGRADO Y SIN ERRORES!
+## 🚀 Instalación y Configuración
 
-### 📋 Cómo usar:
+### Requisitos Previos
+- Python 3.7 o superior
+- Navegador web moderno (Chrome, Firefox, Edge, Safari)
 
-1. **Ve a**: `http://localhost:8000`
-2. **¡Listo!** - El sistema funciona inmediatamente, sin login ni complicaciones
+### Instalación Automática (Windows)
 
-### ✨ Características:
+1. **Ejecutar instalación automática:**
+   ```bash
+   install.bat
+   ```
 
-- ✅ **Registro de Estudiantes**: Agrega estudiantes con nombre, documento y grado
-- ✅ **Registro de Notas**: Registra notas por materia (1-5)
-- ✅ **Lista de Estudiantes**: Ve todos los estudiantes con sus promedios
-- ✅ **Consulta Individual**: Busca un estudiante y ve todas sus notas
-- ✅ **Interfaz Limpia**: Diseño simple y fácil de usar
-- ✅ **Sin Errores**: Código completamente funcional
-- ✅ **Todo Integrado**: Una sola página con todas las funcionalidades
+2. **Iniciar el servidor backend:**
+   ```bash
+   start-backend.bat
+   ```
 
-### 🎯 Funcionalidades:
+3. **Abrir el sistema:**
+   - Abrir `index.html` en tu navegador
+   - El sistema detectará automáticamente el backend
 
-#### 1. **Registro de Estudiantes**
-- Nombre completo
-- Documento de identidad
-- Grado (6° a 11°)
-- Validación automática de duplicados
+### Instalación Manual
 
-#### 2. **Registro de Notas**
-- Seleccionar estudiante por documento
-- Elegir materia (Matemáticas, Español, Ciencias, Sociales, Inglés)
-- Ingresar nota (1.0 a 5.0)
-- Fecha automática
+1. **Instalar dependencias de Python:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-#### 3. **Lista de Estudiantes**
-- Muestra todos los estudiantes registrados
-- Calcula promedio automáticamente
-- Información completa de cada estudiante
+2. **Iniciar servidor backend:**
+   ```bash
+   python server.py
+   ```
 
-#### 4. **Consulta de Notas**
-- Buscar por documento
-- Ver información del estudiante
-- Lista completa de notas por materia
-- Promedio general calculado
+3. **Abrir el sistema:**
+   - Abrir `index.html` en tu navegador
+   - URL del backend: http://localhost:5000
 
-### 🔧 Archivos del Sistema:
+## 🔧 Funcionalidades del Backend
 
-- `index.html` - **PÁGINA PRINCIPAL** (todo integrado aquí)
-- `students.csv` - Base de datos de estudiantes (opcional)
-- `grades.csv` - Base de datos de notas (opcional)
-- `teachers.csv` - Base de datos de profesores (opcional)
+### ✅ Características Implementadas
 
-### 💡 Ventajas de esta versión:
+- **Sincronización Automática**: Las notas se guardan automáticamente en el CSV
+- **Sistema de Backups**: Backup automático antes de cada modificación
+- **Borrado de Notas**: Eliminación segura de notas por período
+- **Modo Híbrido**: Funciona con y sin backend (fallback local)
+- **API REST**: Endpoints para todas las operaciones
 
-- **Sin archivos externos** - Todo CSS y JavaScript integrado
-- **Sin login complicado** - Funciona inmediatamente
-- **Sin base de datos compleja** - Todo en memoria, simple y rápido
-- **Sin errores** - Código limpio y probado
-- **Interfaz intuitiva** - Fácil de usar para cualquier persona
-- **Responsive** - Funciona en cualquier dispositivo
-- **Una sola página** - Todo integrado en `index.html`
+### 📡 Endpoints Disponibles
 
-### 🎨 Diseño:
+- `GET /api/health` - Verificar estado del servidor
+- `GET /api/students` - Obtener todos los estudiantes
+- `POST /api/update-students` - Actualizar datos de estudiantes
+- `POST /api/clear-notes` - Borrar notas de un período
+- `GET /api/download-csv` - Descargar CSV actual
+- `GET /api/backups` - Listar backups disponibles
 
-- Colores modernos y profesionales (gradientes azul-púrpura)
-- Tarjetas organizadas para cada función
-- Mensajes de confirmación claros
-- Animaciones suaves
-- Diseño responsive
+## 🔄 Flujo de Trabajo
 
-### 📱 Uso Paso a Paso:
+### Con Backend Activo
+1. **Guardar Notas**: Se guardan automáticamente en el CSV
+2. **Backup Automático**: Se crea backup antes de cada cambio
+3. **Sincronización**: Datos siempre actualizados
+4. **Persistencia**: Cambios permanentes en el archivo
 
-1. **Abre**: `http://localhost:8000`
-2. **Registra estudiantes**: Llena el formulario de "Registro de Estudiantes"
-3. **Agrega notas**: Usa el formulario "Registro de Notas"
-4. **Ve la lista**: Haz clic en "Cargar Estudiantes"
-5. **Consulta notas**: Usa "Consulta de Notas" para ver detalles
+### Sin Backend (Modo Local)
+1. **Funcionamiento Normal**: Todas las funciones disponibles
+2. **Datos en Memoria**: Cambios solo en la sesión actual
+3. **Fallback**: Sistema funciona independientemente
 
-### 🧹 Limpieza Realizada:
+## 📁 Estructura de Archivos
 
-**Archivos eliminados (ya no necesarios):**
-- `simple.html` ❌
-- `start.html` ❌
-- `debug.html` ❌
-- `test.html` ❌
-- `script.js` ❌
-- `dashboard_styles.css` ❌
-
-**Archivos mantenidos:**
-- `index.html` ✅ (página principal integrada)
-- `*.csv` ✅ (bases de datos opcionales)
-- `README.md` ✅ (documentación)
-
-## 🎉 ¡El sistema está listo para usar!
-
-**Todo integrado en una sola página. Sin errores, sin complicaciones. Solo funcionalidad pura.**
-
-### 🔗 Acceso Directo:
 ```
-http://localhost:8000
+Sistema-Notas/
+├── index.html              # Frontend principal
+├── students.csv            # Base de datos de estudiantes
+├── server.py              # Servidor backend Flask
+├── requirements.txt       # Dependencias Python
+├── install.bat           # Script de instalación
+├── start-backend.bat     # Script de inicio
+└── backups/              # Directorio de backups automáticos
+    ├── students_backup_20241201_143022.csv
+    └── ...
 ```
 
-¡Ya no necesitas navegar entre diferentes páginas ni recordar URLs complicadas!
+## 🛡️ Seguridad y Backups
+
+### Sistema de Backups Automáticos
+- **Creación**: Antes de cada modificación del CSV
+- **Ubicación**: Directorio `backups/`
+- **Formato**: `students_backup_YYYYMMDD_HHMMSS.csv`
+- **Retención**: Manual (recomendado limpiar periódicamente)
+
+### Validaciones
+- **Rango de Notas**: 0.0 - 5.0
+- **Validación de Datos**: Antes de guardar
+- **Confirmaciones**: Para operaciones destructivas
+
+## 🔧 Configuración Avanzada
+
+### Cambiar Puerto del Backend
+Editar `server.py` línea 15:
+```python
+PORT = 5000  # Cambiar por el puerto deseado
+```
+
+### Cambiar URL del Backend
+Editar `index.html` línea 2743:
+```javascript
+const BACKEND_URL = 'http://localhost:5000';  // Cambiar URL
+```
+
+## 🐛 Solución de Problemas
+
+### Backend No Inicia
+1. Verificar que Python esté instalado
+2. Verificar que el puerto 5000 esté libre
+3. Ejecutar: `pip install -r requirements.txt`
+
+### Frontend No Conecta
+1. Verificar que el backend esté ejecutándose
+2. Verificar URL en `index.html`
+3. Revisar consola del navegador para errores
+
+### Datos No Se Guardan
+1. Verificar permisos de escritura en el directorio
+2. Verificar que `students.csv` existe
+3. Revisar logs del servidor backend
+
+## 📊 Monitoreo
+
+### Logs del Backend
+El servidor muestra logs detallados:
+- ✅ Conexiones exitosas
+- ⚠️ Advertencias
+- ❌ Errores
+
+### Consola del Navegador
+- ✅ Conexión con backend
+- ⚠️ Modo local activado
+- ❌ Errores de comunicación
+
+## 🚀 Próximas Mejoras
+
+- [ ] Interfaz web para gestión de backups
+- [ ] Sistema de usuarios y permisos
+- [ ] Exportación a múltiples formatos
+- [ ] Dashboard de estadísticas avanzadas
+- [ ] API para integración con otros sistemas
+
+---
+
+**Nota**: Este sistema está diseñado para funcionar tanto con backend como sin él, garantizando máxima flexibilidad y disponibilidad.
