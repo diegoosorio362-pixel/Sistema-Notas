@@ -2649,10 +2649,10 @@
 
 
     <script>
-        // Datos hardcodeados
-        const users = [
-            { username: 'profesor', password: '123456', name: 'Profesor Principal' },
-            { username: 'admin', password: 'admin123', name: 'Administrador' }
+        // Datos de usuarios (se cargarán desde teachers.csv)
+        let users = [
+            { username: 'profesor', password: '123456', name: 'Profesor Principal', role: 'teacher' },
+            { username: 'admin', password: 'admin123', name: 'Administrador', role: 'admin' }
         ];
 
         // Datos de estudiantes con sistema híbrido de períodos
@@ -2935,6 +2935,58 @@
             console.log(`Notas del Período ${periodNumber} borradas para ${clearedCount} estudiantes (modo local)`);
         }
         
+        // Función para cargar usuarios desde teachers.csv
+        async function loadUsersFromCSV() {
+            try {
+                const response = await fetch('teachers.csv');
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',');
+                
+                users = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim()) {
+                        const values = lines[i].split(',');
+                        const user = {
+                            id: parseInt(values[0]),
+                            username: values[1],
+                            password: values[2],
+                            name: values[3],
+                            role: values[4],
+                            email: values[5],
+                            active: values[6] === '1'
+                        };
+                        
+                        // Solo agregar usuarios activos
+                        if (user.active) {
+                            users.push(user);
+                        }
+                    }
+                }
+                
+                console.log(`✅ Cargados ${users.length} usuarios desde teachers.csv`);
+                return true;
+            } catch (error) {
+                console.warn('⚠️ No se pudo cargar teachers.csv, usando usuarios por defecto:', error);
+                return false;
+            }
+        }
+
+        // Función para inicializar notas del estudiante si no existen
+        function initializeStudentNotes(student) {
+            if (!Array.isArray(student.saber_notes)) {
+                student.saber_notes = [];
+            }
+            if (!Array.isArray(student.hacer_notes)) {
+                student.hacer_notes = [];
+            }
+            if (!Array.isArray(student.ser_notes)) {
+                student.ser_notes = [];
+            }
+            return student;
+        }
+
         // Función para cargar estudiantes desde el backend
         async function loadStudentsFromBackend() {
             try {
@@ -2942,7 +2994,8 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    students = result.data;
+                    // Inicializar notas de todos los estudiantes
+                    students = result.data.map(student => initializeStudentNotes(student));
                     console.log(`✅ Cargados ${result.count} estudiantes desde el backend`);
                     return true;
                 } else {
@@ -3369,7 +3422,7 @@
         // Función para mostrar información del estudiante
         function showStudentInfo(student) {
             const studentDetails = document.getElementById('studentDetails');
-            const promedioGeneral = ((student.saber_pg + student.hacer_pg + student.ser_pg) / 3).toFixed(1);
+            const promedioGeneral = calculateGeneralAverage(student);
             
             studentDetails.innerHTML = `
                 <div class="student-details">
@@ -3834,21 +3887,44 @@
             return notes;
         }
 
-        // Función para calcular promedio ponderado automáticamente
+        // Función para calcular promedio ponderado correctamente
         function calculateWeightedAverageAuto(category, notes) {
-            if (notes.length === 0) {
-                throw new Error('Debe haber al menos una nota');
+            // Verificar que notes sea un array válido
+            if (!Array.isArray(notes) || notes.length === 0) {
+                return 0; // Retornar 0 si no hay notas en lugar de lanzar error
             }
             
-            // Calcular porcentaje equitativo: 100% dividido entre el número de notas
-            const percentagePerNote = 100 / notes.length;
+            // Filtrar solo valores numéricos válidos
+            const validNotes = notes.filter(note => !isNaN(parseFloat(note)) && parseFloat(note) >= 0);
             
-            // Calcular promedio ponderado
-            const weightedSum = notes.reduce((sum, note) => {
-                return sum + (note * percentagePerNote / 100);
-            }, 0);
+            if (validNotes.length === 0) {
+                return 0;
+            }
             
-            return Math.round(weightedSum * 100) / 100;
+            // Paso 1: Calcular promedio simple de las notas individuales
+            const sumNotes = validNotes.reduce((sum, note) => sum + parseFloat(note), 0);
+            const averageNotes = sumNotes / validNotes.length;
+            
+            // Paso 2: Aplicar porcentaje de categoría (40% Saber/Hacer, 20% Ser)
+            const categoryPercentage = getCategoryPercentage(category);
+            const weightedAverage = (averageNotes * categoryPercentage) / 100;
+            
+            return Math.round(weightedAverage * 100) / 100; // Redondear a 2 decimales
+        }
+
+        // Función para calcular promedio general ponderado
+        function calculateGeneralAverage(student) {
+            // Asegurar que las notas sean arrays válidos
+            const saberNotes = Array.isArray(student.saber_notes) ? student.saber_notes : [];
+            const hacerNotes = Array.isArray(student.hacer_notes) ? student.hacer_notes : [];
+            const serNotes = Array.isArray(student.ser_notes) ? student.ser_notes : [];
+            
+            const saberAverage = calculateWeightedAverageAuto('saber', saberNotes);
+            const hacerAverage = calculateWeightedAverageAuto('hacer', hacerNotes);
+            const serAverage = calculateWeightedAverageAuto('ser', serNotes);
+            
+            const generalAverage = saberAverage + hacerAverage + serAverage;
+            return Math.round(generalAverage * 100) / 100;
         }
 
         // Función para mostrar información de porcentajes en el panel
@@ -3947,6 +4023,9 @@
 
         // Cargar datos iniciales
         async function loadInitialData() {
+            // Cargar usuarios desde CSV
+            await loadUsersFromCSV();
+            
             // Intentar cargar datos desde el backend primero
             const backendAvailable = await checkBackendConnection();
             if (backendAvailable) {
@@ -3955,9 +4034,13 @@
                     console.log('✅ Datos cargados desde el backend');
                 } else {
                     console.log('⚠️ Fallback a datos locales');
+                    // Inicializar datos locales también
+                    students = students.map(student => initializeStudentNotes(student));
                 }
             } else {
                 console.log('⚠️ Backend no disponible, usando datos locales');
+                // Inicializar datos locales
+                students = students.map(student => initializeStudentNotes(student));
             }
             
             loadStudentsTable();
@@ -3968,11 +4051,10 @@
         function updateStats() {
             document.getElementById('totalStudents').textContent = students.length;
             
-            // Calcular promedio general usando los datos del CSV
+            // Calcular promedio general usando el nuevo cálculo ponderado
             let totalAverage = 0;
             students.forEach(student => {
-                // Usar los promedios del CSV (saber_pg, hacer_pg, ser_pg)
-                const average = (student.saber_pg + student.hacer_pg + student.ser_pg) / 3;
+                const average = calculateGeneralAverage(student);
                 totalAverage += average;
             });
             const generalAverage = (totalAverage / students.length).toFixed(1);
@@ -3990,7 +4072,7 @@
             
             students.forEach(student => {
                 const grade = getStudentGrade(student);
-                const average = (student.saber_pg + student.hacer_pg + student.ser_pg) / 3;
+                const average = calculateGeneralAverage(student);
                 gradeStats[grade].count++;
                 gradeStats[grade].total += average;
             });
@@ -4036,7 +4118,7 @@
                 const hacerPromedio = student.hacer_pg;
                 const serN5 = student.ser_n5;
                 const serPromedio = student.ser_pg;
-                const promedioGeneral = ((saberPromedio + hacerPromedio + serPromedio) / 3).toFixed(1);
+                const promedioGeneral = calculateGeneralAverage(student).toFixed(1);
                 
                 // Fila para Saber
                 html += `
