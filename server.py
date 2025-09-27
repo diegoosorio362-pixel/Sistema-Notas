@@ -116,11 +116,88 @@ def health_check():
         'timestamp': datetime.now().isoformat()
     })
 
+@app.route('/api/teachers', methods=['GET'])
+def get_teachers():
+    """Obtener todos los usuarios/maestros del CSV"""
+    try:
+        # Leer el archivo teachers.csv
+        teachers_file = 'teachers.csv'
+        if not os.path.exists(teachers_file):
+            return jsonify({
+                'success': False,
+                'error': 'Archivo teachers.csv no encontrado'
+            }), 404
+        
+        with open(teachers_file, 'r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            teachers = list(reader)
+        
+        # Convertir campos numéricos
+        for teacher in teachers:
+            teacher['id'] = int(teacher['id'])
+            teacher['active'] = teacher['active'] == '1'
+        
+        return jsonify({
+            'success': True,
+            'data': teachers,
+            'count': len(teachers)
+        })
+    except Exception as e:
+        logger.error(f"Error obteniendo usuarios: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/api/students', methods=['GET'])
 def get_students():
     """Obtener todos los estudiantes del CSV"""
     try:
         data = read_csv_data()
+        
+        # Procesar las notas de cada estudiante
+        for student in data:
+            # Convertir strings de notas a arrays de números
+            if 'saber_notes' in student and student['saber_notes']:
+                try:
+                    saber_notes_str = student['saber_notes'].strip('"')  # Remover comillas
+                    student['saber_notes'] = [float(note) for note in saber_notes_str.split(',') if note.strip()]
+                except (ValueError, AttributeError):
+                    student['saber_notes'] = []
+            
+            if 'hacer_notes' in student and student['hacer_notes']:
+                try:
+                    hacer_notes_str = student['hacer_notes'].strip('"')  # Remover comillas
+                    student['hacer_notes'] = [float(note) for note in hacer_notes_str.split(',') if note.strip()]
+                except (ValueError, AttributeError):
+                    student['hacer_notes'] = []
+            
+            if 'ser_notes' in student and student['ser_notes']:
+                try:
+                    ser_notes_str = student['ser_notes'].strip('"')  # Remover comillas
+                    student['ser_notes'] = [float(note) for note in ser_notes_str.split(',') if note.strip()]
+                except (ValueError, AttributeError):
+                    student['ser_notes'] = []
+            
+            # Convertir promedios a float si existen
+            if 'saber_pg' in student and student['saber_pg']:
+                try:
+                    student['saber_pg'] = float(student['saber_pg'])
+                except (ValueError, TypeError):
+                    student['saber_pg'] = 0.0
+            
+            if 'hacer_pg' in student and student['hacer_pg']:
+                try:
+                    student['hacer_pg'] = float(student['hacer_pg'])
+                except (ValueError, TypeError):
+                    student['hacer_pg'] = 0.0
+            
+            if 'ser_pg' in student and student['ser_pg']:
+                try:
+                    student['ser_pg'] = float(student['ser_pg'])
+                except (ValueError, TypeError):
+                    student['ser_pg'] = 0.0
+        
         return jsonify({
             'success': True,
             'data': data,

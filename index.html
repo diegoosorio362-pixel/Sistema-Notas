@@ -880,7 +880,27 @@
         }
 
         .search-input {
-            min-width: 220px;
+            min-width: 280px;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.12) 0%, 
+                rgba(255, 255, 255, 0.08) 100%);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: rgba(59, 130, 246, 0.6);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.18) 0%, 
+                rgba(255, 255, 255, 0.12) 100%);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+            font-style: italic;
         }
 
         .filter-select:focus, .search-input:focus {
@@ -1070,6 +1090,209 @@
             background: rgba(239, 68, 68, 0.2);
             color: #ef4444;
             border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Estilos para la tabla de Nota Final */
+        .final-grade-table-container {
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 24px 0;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            overflow-x: auto;
+        }
+
+        .final-grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .final-grade-table th {
+            background: linear-gradient(135deg, 
+                rgba(59, 130, 246, 0.2) 0%, 
+                rgba(168, 85, 247, 0.15) 100%);
+            color: #ffffff;
+            padding: 20px 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: -0.01em;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .final-grade-table td {
+            padding: 18px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            line-height: 1.4;
+            vertical-align: middle;
+        }
+
+        .final-grade-table tbody tr:hover {
+            background: rgba(59, 130, 246, 0.08);
+            transform: translateY(-1px);
+            transition: all 0.2s ease;
+        }
+
+        .final-grade-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Estilos para el resumen de nota final */
+        .final-grade-summary {
+            margin-top: 32px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, 
+                rgba(59, 130, 246, 0.15) 0%, 
+                rgba(168, 85, 247, 0.1) 100%);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            padding: 28px;
+            backdrop-filter: blur(30px);
+            box-shadow: 
+                0 12px 40px rgba(59, 130, 246, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                rgba(59, 130, 246, 0.8) 0%, 
+                rgba(168, 85, 247, 0.8) 100%);
+        }
+
+        .summary-card h3 {
+            color: #ffffff;
+            margin: 0 0 24px 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-stat {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.08) 0%, 
+                rgba(255, 255, 255, 0.03) 100%);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .summary-stat:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .summary-stat .stat-label {
+            display: block;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-stat .stat-value {
+            display: block;
+            font-size: 1.8rem;
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Estilos para estados de aprobación */
+        .status-approved {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .status-failed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .final-grade-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 80px;
+            display: inline-block;
+        }
+
+        .final-grade-excellent {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 2px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .final-grade-good {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 2px solid rgba(59, 130, 246, 0.4);
+        }
+
+        .final-grade-average {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 2px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .final-grade-poor {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 2px solid rgba(239, 68, 68, 0.4);
         }
 
         /* Estilos para botones de acciones */
@@ -2313,6 +2536,10 @@
                         <span class="icon">📋</span>
                         <span>Ver Calificaciones</span>
                     </a></li>
+                    <li><a href="#" onclick="openModal('finalGrade')">
+                        <span class="icon">🎯</span>
+                        <span>Nota Final</span>
+                    </a></li>
                     <li><a href="#" onclick="openModal('studentsList')">
                         <span class="icon">👥</span>
                         <span>Lista de Estudiantes</span>
@@ -2576,6 +2803,65 @@
                                     <!-- Las notas se cargarán aquí -->
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Final Grade Content -->
+                <div id="finalGradeContent" class="content-section">
+                    <div class="content-card">
+                        <div class="section-header">
+                            <h2>🎯 Nota Final del Período</h2>
+                            <div class="filters">
+                                <input type="text" id="finalGradeSearch" class="search-input" placeholder="🔍 Buscar por nombre o documento...">
+                                <select id="finalGradeFilter" class="filter-select">
+                                    <option value="">Todos los estudiantes</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="final-grade-table-container">
+                            <table class="final-grade-table">
+                                <thead>
+                                    <tr>
+                                        <th>👤 Estudiante</th>
+                                        <th>📄 Documento</th>
+                                        <th>🎓 Grado</th>
+                                        <th>🧠 Saber PG</th>
+                                        <th>⚡ Hacer PG</th>
+                                        <th>❤️ Ser PG</th>
+                                        <th>🎯 Nota Final</th>
+                                        <th>📊 Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="finalGradeTableBody">
+                                    <!-- Las notas finales se cargarán aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="final-grade-summary">
+                            <div class="summary-card">
+                                <h3>📊 Resumen del Período</h3>
+                                <div class="summary-stats">
+                                    <div class="summary-stat">
+                                        <span class="stat-label">Total Estudiantes:</span>
+                                        <span class="stat-value" id="totalStudentsFinal">0</span>
+                                    </div>
+                                    <div class="summary-stat">
+                                        <span class="stat-label">Promedio General:</span>
+                                        <span class="stat-value" id="averageFinalGrade">0.0</span>
+                                    </div>
+                                    <div class="summary-stat">
+                                        <span class="stat-label">Estudiantes Aprobados:</span>
+                                        <span class="stat-value" id="approvedStudents">0</span>
+                                    </div>
+                                    <div class="summary-stat">
+                                        <span class="stat-label">Estudiantes Reprobados:</span>
+                                        <span class="stat-value" id="failedStudents">0</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2938,10 +3224,29 @@
         // Función para cargar usuarios desde teachers.csv
         async function loadUsersFromCSV() {
             try {
+                // Intentar cargar desde el backend primero
+                const backendAvailable = await checkBackendConnection();
+                let csvText = '';
+                
+                if (backendAvailable) {
+                    try {
+                        const response = await fetch(`${BACKEND_URL}/api/teachers`);
+                        const result = await response.json();
+                        if (result.success) {
+                            // Procesar datos del backend
+                            users = result.data.filter(user => user.active);
+                            console.log(`✅ Cargados ${users.length} usuarios desde el backend`);
+                            return true;
+                        }
+                    } catch (backendError) {
+                        console.warn('⚠️ Backend no tiene endpoint de usuarios, intentando CSV local');
+                    }
+                }
+                
+                // Fallback: intentar cargar CSV local
                 const response = await fetch('teachers.csv');
-                const csvText = await response.text();
+                csvText = await response.text();
                 const lines = csvText.split('\n');
-                const headers = lines[0].split(',');
                 
                 users = [];
                 
@@ -2969,12 +3274,14 @@
                 return true;
             } catch (error) {
                 console.warn('⚠️ No se pudo cargar teachers.csv, usando usuarios por defecto:', error);
+                // Mantener usuarios por defecto que ya están definidos
                 return false;
             }
         }
 
         // Función para inicializar notas del estudiante si no existen
         function initializeStudentNotes(student) {
+            // Asegurar que las notas sean arrays
             if (!Array.isArray(student.saber_notes)) {
                 student.saber_notes = [];
             }
@@ -2984,6 +3291,18 @@
             if (!Array.isArray(student.ser_notes)) {
                 student.ser_notes = [];
             }
+            
+            // Asegurar que los promedios sean números
+            if (typeof student.saber_pg !== 'number') {
+                student.saber_pg = 0;
+            }
+            if (typeof student.hacer_pg !== 'number') {
+                student.hacer_pg = 0;
+            }
+            if (typeof student.ser_pg !== 'number') {
+                student.ser_pg = 0;
+            }
+            
             return student;
         }
 
@@ -2994,8 +3313,12 @@
                 const result = await response.json();
                 
                 if (result.success) {
+                    console.log('📊 Datos recibidos del backend:', result.data[0]); // Log del primer estudiante
+                    
                     // Inicializar notas de todos los estudiantes
                     students = result.data.map(student => initializeStudentNotes(student));
+                    
+                    console.log('📊 Primer estudiante después de inicializar:', students[0]); // Log después de procesar
                     console.log(`✅ Cargados ${result.count} estudiantes desde el backend`);
                     return true;
                 } else {
@@ -4008,6 +4331,12 @@
         
         // Event listener para filtro de estudiantes en notas
         document.getElementById('filterStudent').addEventListener('change', loadGradesTable);
+        
+        // Event listener para filtro de estudiantes en nota final
+        document.getElementById('finalGradeFilter').addEventListener('change', loadFinalGradeTable);
+        
+        // Event listener para búsqueda en nota final
+        document.getElementById('finalGradeSearch').addEventListener('input', loadFinalGradeTable);
 
         // Función para manejar el formulario de configuración
         function handleSettings(event) {
@@ -4080,6 +4409,182 @@
             // Mostrar estadísticas por grado en consola para verificación
             console.log('Estadísticas por grado:');
             console.log('10A:', gradeStats['10A'].count, 'estudiantes');
+        }
+
+        // Función para cargar la tabla de calificaciones
+        function loadGradesTable() {
+            const tableBody = document.getElementById('gradesTableBody');
+            const filterStudent = document.getElementById('filterStudent');
+            
+            // Limpiar tabla
+            tableBody.innerHTML = '';
+            
+            // Cargar opciones del filtro
+            filterStudent.innerHTML = '<option value="">Todos los estudiantes</option>';
+            students.forEach(student => {
+                filterStudent.innerHTML += `<option value="${student.documento}">${student.nombre}</option>`;
+            });
+            
+            // Filtrar estudiantes
+            const selectedStudent = filterStudent.value;
+            const filteredStudents = selectedStudent ? 
+                students.filter(s => s.documento === selectedStudent) : students;
+            
+            // Generar filas de la tabla
+            filteredStudents.forEach(student => {
+                const row = document.createElement('tr');
+                
+                // Calcular promedios de cada categoría
+                const saberPG = student.saber_pg || 0;
+                const hacerPG = student.hacer_pg || 0;
+                const serPG = student.ser_pg || 0;
+                
+                // Calcular promedio general
+                const generalAverage = calculateGeneralAverage(student);
+                
+                row.innerHTML = `
+                    <td>${student.nombre}</td>
+                    <td>${student.documento}</td>
+                    <td>${student.grado}</td>
+                    <td><span class="grade-badge ${getGradeClass(saberPG)}">${saberPG.toFixed(1)}</span></td>
+                    <td><span class="grade-badge ${getGradeClass(hacerPG)}">${hacerPG.toFixed(1)}</span></td>
+                    <td><span class="grade-badge ${getGradeClass(serPG)}">${serPG.toFixed(1)}</span></td>
+                    <td><span class="grade-badge ${getGradeClass(generalAverage)}">${generalAverage.toFixed(1)}</span></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Función para cargar la tabla de Nota Final
+        function loadFinalGradeTable() {
+            const tableBody = document.getElementById('finalGradeTableBody');
+            const filterSelect = document.getElementById('finalGradeFilter');
+            const searchInput = document.getElementById('finalGradeSearch');
+            
+            // Limpiar tabla
+            tableBody.innerHTML = '';
+            
+            // Cargar opciones del filtro
+            filterSelect.innerHTML = '<option value="">Todos los estudiantes</option>';
+            students.forEach(student => {
+                filterSelect.innerHTML += `<option value="${student.documento}">${student.nombre}</option>`;
+            });
+            
+            // Obtener filtros
+            const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const selectedStudent = filterSelect.value;
+            
+            // Filtrar estudiantes
+            let filteredStudents = students;
+            
+            // Aplicar filtro de búsqueda por texto
+            if (searchTerm) {
+                filteredStudents = filteredStudents.filter(s => 
+                    s.nombre.toLowerCase().includes(searchTerm) || 
+                    s.documento.includes(searchTerm) ||
+                    s.grado.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Aplicar filtro de selección específica
+            if (selectedStudent) {
+                filteredStudents = filteredStudents.filter(s => s.documento === selectedStudent);
+            }
+            
+            // Generar filas de la tabla
+            filteredStudents.forEach(student => {
+                const row = document.createElement('tr');
+                
+                // Calcular promedios de cada categoría
+                const saberPG = student.saber_pg || 0;
+                const hacerPG = student.hacer_pg || 0;
+                const serPG = student.ser_pg || 0;
+                
+                // Calcular nota final (suma de los tres promedios)
+                const finalGrade = saberPG + hacerPG + serPG;
+                
+                // Determinar estado de aprobación (mayor a 3.0 para aprobar)
+                const isApproved = finalGrade >= 3.0;
+                const statusClass = isApproved ? 'status-approved' : 'status-failed';
+                const statusText = isApproved ? 'Aprobado' : 'Reprobado';
+                
+                // Determinar clase de nota final
+                const finalGradeClass = getFinalGradeClass(finalGrade);
+                
+                row.innerHTML = `
+                    <td>${student.nombre}</td>
+                    <td>${student.documento}</td>
+                    <td>${student.grado}</td>
+                    <td><span class="grade-badge ${getGradeClass(saberPG)}">${saberPG.toFixed(1)}</span></td>
+                    <td><span class="grade-badge ${getGradeClass(hacerPG)}">${hacerPG.toFixed(1)}</span></td>
+                    <td><span class="grade-badge ${getGradeClass(serPG)}">${serPG.toFixed(1)}</span></td>
+                    <td><span class="final-grade-value ${finalGradeClass}">${finalGrade.toFixed(1)}</span></td>
+                    <td><span class="${statusClass}">${statusText}</span></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Mostrar mensaje si no hay resultados
+            if (filteredStudents.length === 0) {
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.innerHTML = `
+                    <td colspan="8" style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.6); font-style: italic;">
+                        🔍 No se encontraron estudiantes que coincidan con la búsqueda
+                    </td>
+                `;
+                tableBody.appendChild(noResultsRow);
+            }
+            
+            // Actualizar estadísticas del resumen
+            updateFinalGradeSummary(filteredStudents);
+        }
+
+        // Función para obtener la clase CSS de la nota
+        function getGradeClass(grade) {
+            if (grade >= 4.5) return 'grade-excellent';
+            if (grade >= 3.5) return 'grade-good';
+            if (grade >= 3.0) return 'grade-average';
+            return 'grade-poor';
+        }
+
+        // Función para obtener la clase CSS de la nota final
+        function getFinalGradeClass(grade) {
+            if (grade >= 4.5) return 'final-grade-excellent';
+            if (grade >= 4.0) return 'final-grade-good';
+            if (grade >= 3.0) return 'final-grade-average';
+            return 'final-grade-poor';
+        }
+
+        // Función para actualizar el resumen de nota final
+        function updateFinalGradeSummary(filteredStudents) {
+            const totalStudents = filteredStudents.length;
+            const approvedStudents = filteredStudents.filter(s => {
+                const saberPG = s.saber_pg || 0;
+                const hacerPG = s.hacer_pg || 0;
+                const serPG = s.ser_pg || 0;
+                return (saberPG + hacerPG + serPG) >= 3.0;
+            }).length;
+            
+            const failedStudents = totalStudents - approvedStudents;
+            
+            // Calcular promedio general
+            let totalFinalGrade = 0;
+            filteredStudents.forEach(student => {
+                const saberPG = student.saber_pg || 0;
+                const hacerPG = student.hacer_pg || 0;
+                const serPG = student.ser_pg || 0;
+                totalFinalGrade += saberPG + hacerPG + serPG;
+            });
+            
+            const averageFinalGrade = totalStudents > 0 ? totalFinalGrade / totalStudents : 0;
+            
+            // Actualizar elementos del DOM
+            document.getElementById('totalStudentsFinal').textContent = totalStudents;
+            document.getElementById('averageFinalGrade').textContent = averageFinalGrade.toFixed(1);
+            document.getElementById('approvedStudents').textContent = approvedStudents;
+            document.getElementById('failedStudents').textContent = failedStudents;
         }
 
         // Función auxiliar para obtener el estilo de la nota
@@ -4197,6 +4702,7 @@
                 'addStudent': { title: '👤 Agregar Estudiante', subtitle: 'Registra un nuevo estudiante en el sistema' },
                 'uploadGrades': { title: '📝 Subir Notas', subtitle: 'Actualiza las calificaciones de los estudiantes' },
                 'viewGrades': { title: '📋 Ver Calificaciones', subtitle: 'Consulta las notas de todos los estudiantes' },
+                'finalGrade': { title: '🎯 Nota Final', subtitle: 'Sumatoria de Saber PG + Hacer PG + Ser PG' },
                 'studentsList': { title: '👥 Lista de Estudiantes', subtitle: 'Gestiona la información de los estudiantes' },
                 'reports': { title: '📈 Reportes', subtitle: 'Análisis y estadísticas del rendimiento académico' },
                 'settings': { title: '⚙️ Configuración', subtitle: 'Ajustes del sistema y preferencias' }
@@ -4244,6 +4750,8 @@
                 loadInitialData();
             } else if (sectionName === 'viewGrades') {
                 loadGradesTable();
+            } else if (sectionName === 'finalGrade') {
+                loadFinalGradeTable();
             } else if (sectionName === 'studentsList') {
                 loadStudentsTable();
             }
